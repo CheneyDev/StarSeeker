@@ -88,30 +88,23 @@ function insertSearchBox(container) {
     console.log('Is profile page:', isProfilePage);
     
     if (isProfilePage) {
-      // 在个人资料页中，将搜索框插入到合适的位置
-      const searchForm = container.querySelector('form.subnav-search');
-      if (searchForm) {
-        console.log('Found search form, inserting before it');
-        searchForm.parentElement.insertBefore(searchBox.container, searchForm);
+      // 在个人资料页中，将搜索框插入到标题后面
+      const starsTitle = container.querySelector('h2.f3-light');
+      if (starsTitle) {
+        console.log('Found stars title, inserting after it');
+        starsTitle.insertAdjacentElement('afterend', searchBox.container);
       } else {
-        // 尝试找到标题和搜索框之间的位置
-        const flexContainer = container.querySelector('.d-flex.flex-column.flex-lg-row');
-        if (flexContainer) {
-          console.log('Found flex container, inserting before it');
-          flexContainer.parentElement.insertBefore(searchBox.container, flexContainer);
-        } else {
-          console.log('No suitable insertion point found, appending to container');
-          container.appendChild(searchBox.container);
-        }
+        console.log('No stars title found, using default insertion');
+        container.appendChild(searchBox.container);
       }
     } else {
       // 在其他用户页面中，将搜索框插入到标题后面
-      const targetElement = container.querySelector('.d-flex.flex-column.flex-lg-row');
-      if (targetElement) {
-        console.log('Found target element for insertion');
-        container.insertBefore(searchBox.container, targetElement);
+      const starsTitle = container.querySelector('h2.f3-light');
+      if (starsTitle) {
+        console.log('Found stars title, inserting after it');
+        starsTitle.insertAdjacentElement('afterend', searchBox.container);
       } else {
-        console.log('No target element found, appending to container');
+        console.log('No stars title found, using default insertion');
         container.appendChild(searchBox.container);
       }
     }
