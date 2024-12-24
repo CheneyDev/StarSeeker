@@ -8,9 +8,13 @@ class SearchBox {
   }
 
   async initGeminiClient() {
-    const result = await chrome.storage.sync.get(['geminiApiKey']);
-    if (result.geminiApiKey) {
-      this.geminiClient = new GeminiClient(result.geminiApiKey);
+    try {
+      const result = await chrome.storage.sync.get(['geminiApiKey']);
+      if (result.geminiApiKey) {
+        this.geminiClient = new GeminiClient(result.geminiApiKey);
+      }
+    } catch (error) {
+      console.error('Failed to initialize GeminiClient:', error);
     }
   }
 
@@ -29,9 +33,9 @@ class SearchBox {
     this.input = this.container.querySelector('.ai-search-input');
     this.resultsContainer = this.container.querySelector('.ai-search-results');
 
-    this.input.addEventListener('keypress', (e) => {
+    this.input.addEventListener('keypress', async (e) => {
       if (e.key === 'Enter') {
-        this.handleSearch();
+        await this.handleSearch();
       }
     });
   }

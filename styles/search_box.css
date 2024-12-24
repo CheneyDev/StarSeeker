@@ -1,38 +1,57 @@
 .ai-search-container {
-  display: inline-block;
-  width: 320px;
-  margin-right: 16px;
-  vertical-align: middle;
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 8px 0;
+  align-items: center;
+}
+
+/* 在个人资料页中的特殊样式 */
+.d-lg-flex.gutter-lg.mt-5 .ai-search-container {
+  margin: 16px 0;
 }
 
 .ai-search-input {
   width: 100%;
   padding: 5px 12px;
+  padding-left: 32px;
   font-size: 14px;
   line-height: 20px;
   color: var(--color-fg-default);
   background-color: var(--color-canvas-default);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238c959f'%3E%3Cpath d='M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 8px center;
+  background-position: 8px center;
   border: 1px solid var(--color-border-default);
   border-radius: 6px;
   outline: none;
+  box-shadow: var(--color-shadow-inset);
   height: 32px;
-  margin-bottom: 0;
   transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
   transition-property: color,background-color,box-shadow,border-color;
+}
+
+/* 在个人资料页中的输入框样式 */
+.d-lg-flex.gutter-lg.mt-5 .ai-search-input {
+  background-color: var(--color-canvas-subtle);
 }
 
 .ai-search-input:focus {
   border-color: var(--color-accent-fg);
   outline: none;
   box-shadow: var(--color-primer-shadow-focus);
+  background-color: var(--color-canvas-default);
+}
+
+.ai-search-input::placeholder {
+  color: var(--color-fg-subtle);
 }
 
 .ai-search-results {
   position: absolute;
   z-index: 1000;
-  width: 320px;
+  width: 100%;
   margin-top: 4px;
   background-color: var(--color-canvas-overlay);
   border: 1px solid var(--color-border-default);
@@ -50,6 +69,24 @@
   padding: 16px;
   color: var(--color-fg-muted);
   font-size: 14px;
+  gap: 8px;
+}
+
+.ai-loading::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border-default);
+  border-top-color: var(--color-accent-fg);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
@@ -58,4 +95,5 @@
   font-size: 14px;
   background-color: var(--color-danger-subtle);
   border-radius: 6px;
+  margin: 8px;
 } 

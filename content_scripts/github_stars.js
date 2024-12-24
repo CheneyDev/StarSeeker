@@ -31,61 +31,101 @@ function init() {
     return;
   }
 
+  // 确保 SearchBox 类已经加载
+  if (typeof SearchBox === 'undefined') {
+    console.error('GitHub Stars AI Search: SearchBox class is not loaded');
+    return;
+  }
+
   // 等待一小段时间确保 DOM 完全加载
   setTimeout(() => {
-    // 尝试多个可能的选择器
-    const possibleSelectors = [
-      '.table-list-header-toggle',
-      '.repository-list-header',
-      '.user-profile-repositories',
-      '.user-profile-repos-container',
-      '.js-responsive-underlinenav',
-      '.UnderlineNav-body'
-    ];
-
-    let searchArea = null;
-    for (const selector of possibleSelectors) {
-      const element = document.querySelector(selector);
-      if (element) {
-        console.log(`Found matching element with selector: ${selector}`);
-        searchArea = element;
-        break;
-      }
-    }
-    
-    // 如果还是找不到，尝试找到仓库列表的父容器
-    if (!searchArea) {
-      const repoList = document.querySelector('[data-repository-hovercards-enabled]');
-      if (repoList) {
-        searchArea = repoList.parentElement;
-        console.log('Found repository list container');
-      }
-    }
-    
-    // 查找现有的搜索框容器
-    const existingSearch = document.querySelector('.ai-search-container');
-
-    if (!searchArea) {
-      console.error('GitHub Stars AI Search: Could not find any suitable container');
-      // 输出页面结构以帮助调试
-      console.log('Current page structure:', document.body.innerHTML);
-      return;
-    }
-
-    // 如果搜索框已存在，不要重复添加
-    if (existingSearch) {
-      return;
-    }
-
     try {
-      const searchBox = new SearchBox();
-      // 将搜索框插入到搜索区域的开头
-      searchArea.insertBefore(searchBox.container, searchArea.firstChild);
-      console.log('GitHub Stars AI Search: SearchBox successfully initialized');
+      // 首先尝试查找个人资料页的搜索框容器
+      const searchContainer = document.querySelector('#user-profile-frame');
+      if (searchContainer) {
+        console.log('Found profile page container');
+        // 在个人资料页中
+        const titleContainer = searchContainer.querySelector('.col-lg-12');
+        if (titleContainer) {
+          console.log('Found title container in profile page');
+          insertSearchBox(titleContainer);
+          return;
+        }
+      }
+
+      // 如果不是个人资料页，尝试其他用户页面的布局
+      const starsTitle = document.querySelector('h2.f3-light');
+      if (starsTitle) {
+        console.log('Found stars title in other user page');
+        const titleContainer = starsTitle.parentElement;
+        if (titleContainer) {
+          insertSearchBox(titleContainer);
+          return;
+        }
+      }
+
+      console.error('GitHub Stars AI Search: Could not find suitable container');
     } catch (error) {
-      console.error('GitHub Stars AI Search: Failed to initialize SearchBox', error);
+      console.error('GitHub Stars AI Search: Error during initialization', error);
     }
-  }, 1000); // 增加等待时间到 1 秒
+  }, 1000);
+}
+
+function insertSearchBox(container) {
+  // 检查是否已存在搜索框
+  const existingSearch = document.querySelector('.ai-search-container');
+  if (existingSearch) {
+    console.log('Search box already exists, skipping insertion');
+    return;
+  }
+
+  try {
+    console.log('Creating new SearchBox instance');
+    const searchBox = new SearchBox();
+    
+    // 检查是否是个人资料页
+    const isProfilePage = container.closest('#user-profile-frame') !== null;
+    console.log('Is profile page:', isProfilePage);
+    
+    if (isProfilePage) {
+      // 在个人资料页中，将搜索框插入到合适的位置
+      const searchForm = container.querySelector('form.subnav-search');
+      if (searchForm) {
+        console.log('Found search form, inserting before it');
+        searchForm.parentElement.insertBefore(searchBox.container, searchForm);
+      } else {
+        // 尝试找到标题和搜索框之间的位置
+        const flexContainer = container.querySelector('.d-flex.flex-column.flex-lg-row');
+        if (flexContainer) {
+          console.log('Found flex container, inserting before it');
+          flexContainer.parentElement.insertBefore(searchBox.container, flexContainer);
+        } else {
+          console.log('No suitable insertion point found, appending to container');
+          container.appendChild(searchBox.container);
+        }
+      }
+    } else {
+      // 在其他用户页面中，将搜索框插入到标题后面
+      const targetElement = container.querySelector('.d-flex.flex-column.flex-lg-row');
+      if (targetElement) {
+        console.log('Found target element for insertion');
+        container.insertBefore(searchBox.container, targetElement);
+      } else {
+        console.log('No target element found, appending to container');
+        container.appendChild(searchBox.container);
+      }
+    }
+    
+    console.log('GitHub Stars AI Search: SearchBox successfully inserted');
+  } catch (error) {
+    console.error('GitHub Stars AI Search: Failed to insert SearchBox', {
+      error: error.toString(),
+      errorStack: error.stack,
+      container: container ? container.outerHTML : 'null',
+      containerHTML: container ? container.innerHTML : 'null',
+      isProfilePage: container ? container.closest('#user-profile-frame') !== null : 'null'
+    });
+  }
 }
 
 // 在页面加载完成后执行初始化
