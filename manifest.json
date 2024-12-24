@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Stars AI Search",
+  "description": "Search through your GitHub stars using natural language with Gemini AI",
+  "version": "1.0",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "api/gemini_client.js",
+        "components/search_box.js",
+        "content_scripts/github_stars.js"
+      ],
+      "css": ["styles/search_box.css"]
+    }
+  ],
+  "options_page": "options/options.html"
+} 
