@@ -1,7 +1,7 @@
 class SearchBox {
   constructor() {
     this.container = document.createElement('div');
-    this.container.className = 'subnav-search width-full';
+    this.container.className = 'subnav-search width-full max-w-[800px] mx-auto';
     this.geminiClient = null;
     this.initGeminiClient();
     this.render();
@@ -21,36 +21,36 @@ class SearchBox {
   render() {
     this.container.innerHTML = `
       <div class="FormControl-spacingWrapper">
-        <div class="FormControl-horizontalGroup">
-          <div class="FormControl width-full">
+        <div class="FormControl-horizontalGroup relative flex items-center gap-2">
+          <div class="FormControl flex-1 relative">
             <label class="sr-only FormControl-label" for="star-search">
               Search stars
             </label>    
-            <div class="FormControl-input-wrap">
+            <div class="FormControl-input-wrap relative">
               <input 
                 id="star-search"
                 type="search" 
-                class="FormControl-input FormControl-medium"
-                placeholder="Search stars"
+                class="FormControl-input FormControl-medium w-full px-3 py-2 bg-[var(--color-canvas-default)] border border-[var(--color-border-default)] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-fg)] focus:border-[var(--color-accent-fg)] transition-colors duration-200"
+                placeholder="Search stars..."
                 aria-label="Search stars"
                 autocomplete="off"
                 spellcheck="false"
               >
             </div>
           </div>
-          <button type="button" class="search-clear-button" style="display: none;">
-            <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-              <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+          <button type="button" class="search-clear-button hidden p-2 hover:bg-[var(--color-canvas-subtle)] rounded-md transition-colors duration-200">
+            <svg class="octicon h-4 w-4 text-[var(--color-fg-muted)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+              <path fill="currentColor" d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
             </svg>
           </button>
-          <button type="submit" class="Button Button--secondary" data-hotkey="s,/" data-action="click:qbsearch-input#handleSubmit">
+          <button type="submit" class="Button Button--secondary px-4 py-2 bg-[var(--color-btn-primary-bg)] text-[var(--color-btn-primary-fg)] rounded-md hover:bg-[var(--color-btn-primary-hover-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-fg)] transition-colors duration-200" data-hotkey="s,/" data-action="click:qbsearch-input#handleSubmit">
             <span class="Button-content">
               <span class="Button-label">Search</span>
             </span>
           </button>
         </div>
       </div>
-      <div class="search-results"></div>
+      <div class="search-results mt-4 space-y-4"></div>
     `;
 
     // 获取元素引用
@@ -106,7 +106,11 @@ class SearchBox {
 
   showLoading() {
     this.resultsContainer.innerHTML = `
-      <div class="ai-loading">
+      <div class="ai-loading flex items-center justify-center p-4 text-[var(--color-fg-muted)]">
+        <svg class="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
         Searching through your starred repositories...
       </div>
     `;
@@ -114,8 +118,13 @@ class SearchBox {
 
   showError(error) {
     this.resultsContainer.innerHTML = `
-      <div class="error">
-        Error: ${error.message}
+      <div class="error p-4 bg-[var(--color-danger-subtle)] text-[var(--color-danger-fg)] rounded-md">
+        <div class="flex items-center">
+          <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+          </svg>
+          Error: ${error.message}
+        </div>
       </div>
     `;
   }
@@ -131,8 +140,8 @@ class SearchBox {
       
       if (links.length === 0) {
         this.resultsContainer.innerHTML = `
-          <div class="search-result-item">
-            <p>No matching repositories found.</p>
+          <div class="search-result-item p-4 bg-[var(--color-canvas-subtle)] rounded-md">
+            <p class="text-[var(--color-fg-muted)]">No matching repositories found.</p>
           </div>
         `;
         return;
@@ -142,21 +151,21 @@ class SearchBox {
         const description = link.nextSibling ? link.nextSibling.textContent.trim() : '';
         
         const resultItem = document.createElement('div');
-        resultItem.className = 'search-result-item';
+        resultItem.className = 'search-result-item p-4 bg-[var(--color-canvas-subtle)] rounded-md hover:bg-[var(--color-canvas-default)] transition-colors duration-200';
         resultItem.style.animationDelay = `${index * 0.1}s`;
         
         const [author, repo] = link.textContent.split('/').map(s => s.trim());
         
         resultItem.innerHTML = `
-          <h3>
-            <a href="${link.href}" target="_blank" rel="noopener noreferrer">
+          <h3 class="text-lg font-semibold mb-2">
+            <a href="${link.href}" class="text-[var(--color-accent-fg)] hover:underline" target="_blank" rel="noopener noreferrer">
               ${author} / <strong>${repo}</strong>
             </a>
           </h3>
-          <p>${description}</p>
-          <div class="search-result-meta">
-            <span>
-              <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16">
+          <p class="text-[var(--color-fg-muted)] mb-3">${description}</p>
+          <div class="search-result-meta flex items-center text-sm text-[var(--color-fg-muted)]">
+            <span class="flex items-center">
+              <svg class="h-4 w-4 mr-1" aria-hidden="true" viewBox="0 0 16 16" version="1.1">
                 <path fill="currentColor" d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path>
               </svg>
               Starred
