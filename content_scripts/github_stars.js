@@ -101,6 +101,15 @@ class StarDataManager {
   }
 
   setupUI() {
+    // 添加插件标题
+    const titleContainer = document.createElement('div');
+    titleContainer.className = 'mb-3 d-flex flex-items-center';
+    titleContainer.innerHTML = `
+      <h3 class="f4 color-fg-default mb-0">Star Seeker</h3>
+      <span class="ml-2 color-fg-muted">GitHub Star 智能管理助手</span>
+    `;
+    this.container.appendChild(titleContainer);
+
     // 状态显示
     this.statusContainer = document.createElement('div');
     this.statusContainer.className = 'mb-2';
@@ -110,29 +119,17 @@ class StarDataManager {
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'd-flex gap-2 mb-3';
     
-    // 获取数据按钮
-    this.fetchButton = document.createElement('button');
-    this.fetchButton.className = 'btn btn-primary btn-sm';
-    this.fetchButton.textContent = '获取Star列表';
-    this.fetchButton.onclick = () => this.startFetching();
+    // 同步数据按钮（合并获取和刷新功能）
+    this.syncButton = document.createElement('button');
+    this.syncButton.className = 'btn btn-primary btn-sm';
+    this.syncButton.textContent = '同步Star数据';
+    this.syncButton.onclick = () => this.startFetching();
     
     // 查看数据按钮
     this.viewButton = document.createElement('button');
     this.viewButton.className = 'btn btn-outline-primary btn-sm';
     this.viewButton.textContent = '查看数据';
     this.viewButton.onclick = () => this.toggleDataView();
-    
-    // 刷新按钮
-    this.refreshButton = document.createElement('button');
-    this.refreshButton.className = 'btn btn-outline-primary btn-sm';
-    this.refreshButton.textContent = '刷新数据';
-    this.refreshButton.onclick = () => this.refreshData();
-    
-    // 删除按钮
-    this.deleteButton = document.createElement('button');
-    this.deleteButton.className = 'btn btn-outline-danger btn-sm';
-    this.deleteButton.textContent = '删除数据';
-    this.deleteButton.onclick = () => this.deleteData();
 
     // 管理缓存按钮
     this.manageButton = document.createElement('button');
@@ -140,12 +137,15 @@ class StarDataManager {
     this.manageButton.textContent = '管理缓存';
     this.manageButton.onclick = () => this.toggleManagePanel();
     
-    buttonContainer.appendChild(this.fetchButton);
+    buttonContainer.appendChild(this.syncButton);
     buttonContainer.appendChild(this.viewButton);
-    buttonContainer.appendChild(this.refreshButton);
-    buttonContainer.appendChild(this.deleteButton);
     buttonContainer.appendChild(this.manageButton);
     this.container.appendChild(buttonContainer);
+
+    // 搜索框容器
+    this.searchContainer = document.createElement('div');
+    this.searchContainer.className = 'mb-3';
+    this.container.appendChild(this.searchContainer);
 
     // 数据展示面板
     this.dataPanel = document.createElement('div');
@@ -252,7 +252,7 @@ class StarDataManager {
   }
 
   async startFetching() {
-    this.fetchButton.disabled = true;
+    this.syncButton.disabled = true;
     this.statusContainer.textContent = '正在获取数据...';
     
     try {
@@ -276,7 +276,7 @@ class StarDataManager {
       console.error('Failed to fetch stars:', error);
       this.statusContainer.textContent = '获取数据失败: ' + error.message;
     } finally {
-      this.fetchButton.disabled = false;
+      this.syncButton.disabled = false;
     }
   }
 
@@ -298,8 +298,6 @@ class StarDataManager {
     const username = getUsernameFromUrl();
     if (!username) {
       this.statusContainer.textContent = '无法获取用户名';
-      this.refreshButton.disabled = true;
-      this.deleteButton.disabled = true;
       this.viewButton.disabled = true;
       return;
     }
@@ -316,13 +314,9 @@ class StarDataManager {
           最后更新: ${lastUpdated}
         </div>
       `;
-      this.refreshButton.disabled = false;
-      this.deleteButton.disabled = false;
       this.viewButton.disabled = false;
     } else {
       this.statusContainer.textContent = '未获取Star数据';
-      this.refreshButton.disabled = true;
-      this.deleteButton.disabled = true;
       this.viewButton.disabled = true;
       if (this.dataPanel.style.display !== 'none') {
         this.toggleDataView();
@@ -480,10 +474,13 @@ function insertSearchBox(container) {
     // 保存实例引用以便事件处理
     dataManager.container.__dataManager = dataManager;
     
+    // 将搜索框添加到数据管理器的搜索容器中
+    dataManager.searchContainer.appendChild(searchBox.container);
+    
+    // 创建一个容器来包装所有组件
     const wrapper = document.createElement('div');
     wrapper.className = 'star-seeker-container';
     wrapper.appendChild(dataManager.container);
-    wrapper.appendChild(searchBox.container);
     
     // 查找 Lists 和 Stars 区域的共同父容器
     const mainContent = document.querySelector('#user-profile-frame');
