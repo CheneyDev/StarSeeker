@@ -168,13 +168,18 @@ class StarDataManager {
         // 创建表格视图
         const table = document.createElement('table');
         table.className = 'width-full';
-        table.style.borderCollapse = 'collapse';
+        table.style.cssText = `
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+        `;
         
         // 表头
         const thead = document.createElement('thead');
         thead.innerHTML = `
           <tr class="color-bg-subtle">
-            <th class="p-2 border" style="width: 40%">仓库名称</th>
+            <th class="p-2 border" style="width: 60px">序号</th>
+            <th class="p-2 border" style="width: 35%">仓库名称</th>
             <th class="p-2 border">描述</th>
           </tr>
         `;
@@ -185,24 +190,42 @@ class StarDataManager {
         userData.repos.forEach((repo, index) => {
           const tr = document.createElement('tr');
           tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
+          
+          // 使用模板字符串创建单元格，添加文本溢出控制的样式
           tr.innerHTML = `
-            <td class="p-2 border">
-              <a href="https://github.com/${repo.full_name}" 
-                 target="_blank" 
-                 class="Link--primary no-underline">
-                ${repo.full_name}
-              </a>
+            <td class="p-2 border text-center">${index + 1}</td>
+            <td class="p-2 border" style="max-width: 0">
+              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <a href="https://github.com/${repo.full_name}" 
+                   target="_blank" 
+                   class="Link--primary no-underline"
+                   title="${repo.full_name}">
+                  ${repo.full_name}
+                </a>
+              </div>
             </td>
-            <td class="p-2 border color-fg-muted">
-              ${repo.description || '暂无描述'}
+            <td class="p-2 border color-fg-muted" style="max-width: 0">
+              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                   title="${repo.description || '暂无描述'}">
+                ${repo.description || '暂无描述'}
+              </div>
             </td>
           `;
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
         
+        // 创建一个包装器来控制表格的水平滚动
+        const tableWrapper = document.createElement('div');
+        tableWrapper.style.cssText = `
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        `;
+        tableWrapper.appendChild(table);
+        
         this.dataPanel.innerHTML = '';
-        this.dataPanel.appendChild(table);
+        this.dataPanel.appendChild(tableWrapper);
       }
       
       this.dataPanel.style.display = 'block';
