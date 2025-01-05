@@ -1,108 +1,186 @@
 .star-seeker-container {
-  background: linear-gradient(to right, #ffffff, #f8f9fa);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  margin: 12px 0;
-  border: 1px solid #e1e4e8;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06),
+              0 1px 2px rgba(0, 0, 0, 0.04);
+  padding: 28px;
+  margin: 16px 0;
+  border: 1px solid rgba(225, 228, 232, 0.8);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.star-seeker-container:hover {
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.08),
+              0 1px 2px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
 }
 
 .star-seeker-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.star-seeker-header::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(225, 228, 232, 0) 0%,
+    rgba(225, 228, 232, 0.8) 50%,
+    rgba(225, 228, 232, 0) 100%
+  );
 }
 
 .star-seeker-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #24292f;
   margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  background: linear-gradient(120deg, #24292f, #4a5567);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .star-seeker-stats {
   font-size: 14px;
   color: #57606a;
-  margin: 8px 0;
+  margin: 12px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-seeker-stats::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: #2da44e;
+  border-radius: 50%;
 }
 
 .star-seeker-actions {
   display: flex;
-  gap: 12px;
-  margin: 16px 0;
+  gap: 10px;
+  margin: 24px 0;
 }
 
 .star-seeker-button {
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  letter-spacing: 0.01em;
 }
 
 .star-seeker-button-primary {
-  background-color: #2da44e;
+  background: linear-gradient(135deg, #2ea043, #238636);
   color: white;
   border: 1px solid rgba(27, 31, 36, 0.15);
+  box-shadow: 0 1px 2px rgba(27, 31, 36, 0.1);
 }
 
 .star-seeker-button-primary:hover {
-  background-color: #2c974b;
+  background: linear-gradient(135deg, #2c974b, #216e31);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(27, 31, 36, 0.12);
 }
 
 .star-seeker-button-secondary {
-  background-color: #f6f8fa;
+  background: rgba(246, 248, 250, 0.8);
   color: #24292f;
   border: 1px solid rgba(27, 31, 36, 0.15);
+  box-shadow: 0 1px 2px rgba(27, 31, 36, 0.05);
 }
 
 .star-seeker-button-secondary:hover {
-  background-color: #f3f4f6;
+  background: rgba(246, 248, 250, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(27, 31, 36, 0.08);
 }
 
 .star-seeker-search {
   position: relative;
-  margin: 16px 0 4px 0;
+  margin: 8px 0 4px 0;
 }
 
 .star-seeker-search input {
   width: 100%;
-  padding: 8px 16px;
-  padding-left: 40px;
-  border-radius: 6px;
-  border: 1px solid #d0d7de;
-  font-size: 14px;
-  line-height: 20px;
+  padding: 12px 18px;
+  padding-left: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(208, 215, 222, 0.8);
+  font-size: 15px;
+  line-height: 22px;
   color: #24292f;
-  background-color: #ffffff;
-  transition: border-color 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.star-seeker-search input:hover {
+  border-color: rgba(9, 105, 218, 0.3);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .star-seeker-search input:focus {
   border-color: #0969da;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.2);
+  background-color: #ffffff;
 }
 
 .star-seeker-search svg {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: #57606a;
+  width: 18px;
+  height: 18px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.star-seeker-search input:focus + svg {
+  opacity: 1;
+  color: #0969da;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .star-seeker-container {
-    background: linear-gradient(to right, #0d1117, #161b22);
-    border-color: #30363d;
+    background: linear-gradient(135deg, #0d1117, #161b22);
+    border-color: rgba(48, 54, 61, 0.6);
+  }
+
+  .star-seeker-header::after {
+    background: linear-gradient(90deg, 
+      rgba(48, 54, 61, 0) 0%,
+      rgba(48, 54, 61, 0.8) 50%,
+      rgba(48, 54, 61, 0) 100%
+    );
   }
 
   .star-seeker-title {
-    color: #c9d1d9;
+    background: linear-gradient(120deg, #c9d1d9, #8b949e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .star-seeker-stats {
@@ -110,27 +188,37 @@
   }
 
   .star-seeker-button-secondary {
-    background-color: #21262d;
+    background: rgba(33, 38, 45, 0.8);
     color: #c9d1d9;
-    border-color: #30363d;
+    border-color: rgba(48, 54, 61, 0.6);
   }
 
   .star-seeker-button-secondary:hover {
-    background-color: #30363d;
+    background: rgba(33, 38, 45, 0.95);
   }
 
   .star-seeker-search input {
-    background-color: #0d1117;
-    border-color: #30363d;
+    background-color: rgba(13, 17, 23, 0.8);
+    border-color: rgba(48, 54, 61, 0.6);
     color: #c9d1d9;
+  }
+
+  .star-seeker-search input:hover {
+    border-color: rgba(31, 111, 235, 0.3);
+    background-color: rgba(13, 17, 23, 0.95);
   }
 
   .star-seeker-search input:focus {
     border-color: #1f6feb;
-    box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+    background-color: #0d1117;
+    box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.2);
   }
 
   .star-seeker-search svg {
     color: #8b949e;
+  }
+
+  .star-seeker-search input:focus + svg {
+    color: #1f6feb;
   }
 } 
