@@ -101,70 +101,92 @@ class StarDataManager {
   }
 
   setupUI() {
-    // 添加插件标题
+    // 创建一个顶部容器来包含标题、状态和按钮
+    const headerContainer = document.createElement('div');
+    headerContainer.className = 'mb-3';
+
+    // 创建一个 flex 容器来包含左侧的标题和状态，以及右侧的按钮组
+    const topFlexContainer = document.createElement('div');
+    topFlexContainer.className = 'd-flex justify-content-between align-items-start gap-3';
+
+    // 左侧容器：标题和状态
+    const leftContainer = document.createElement('div');
+    leftContainer.className = 'flex-1 min-width-0';
+
+    // 标题容器
     const titleContainer = document.createElement('div');
-    titleContainer.className = 'mb-3 d-flex flex-items-center';
+    titleContainer.className = 'd-flex flex-items-center flex-wrap gap-2';
     titleContainer.innerHTML = `
       <h3 class="f4 color-fg-default mb-0">Star Seeker</h3>
-      <span class="ml-2 color-fg-muted">GitHub Star 智能管理助手</span>
+      <span class="color-fg-muted">GitHub Star 智能管理助手</span>
     `;
-    this.container.appendChild(titleContainer);
+    leftContainer.appendChild(titleContainer);
 
     // 状态显示
     this.statusContainer = document.createElement('div');
-    this.statusContainer.className = 'mb-2';
-    this.container.appendChild(this.statusContainer);
+    this.statusContainer.className = 'color-fg-muted text-small mt-1';
+    leftContainer.appendChild(this.statusContainer);
 
-    // 操作按钮容器
+    // 右侧按钮组容器
     const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'd-flex gap-2 mb-3';
+    buttonContainer.className = 'd-flex flex-wrap gap-2 flex-shrink-0';
     
-    // 同步数据按钮（合并获取和刷新功能）
+    // 同步数据按钮
     this.syncButton = document.createElement('button');
-    this.syncButton.className = 'btn btn-primary btn-sm';
+    this.syncButton.className = 'btn btn-primary btn-sm px-2 py-0 d-flex flex-items-center';
+    this.syncButton.style.height = '28px';
     this.syncButton.innerHTML = `
-      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
       </svg>
-      同步Star数据
+      <span style="font-size: 12px">同步Star数据</span>
     `;
     this.syncButton.onclick = () => this.startFetching();
     
     // 查看数据按钮
     this.viewButton = document.createElement('button');
-    this.viewButton.className = 'btn btn-outline-primary btn-sm';
+    this.viewButton.className = 'btn btn-outline-primary btn-sm px-2 py-0 d-flex flex-items-center';
+    this.viewButton.style.height = '28px';
     this.viewButton.innerHTML = `
-      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-        <path fill="currentColor" d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25Zm11.75 3.75a.75.75 0 0 0 0-1.5h-8.5a.75.75 0 0 0 0 1.5ZM11 8a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1 0-1.5h4.5c.414 0 .75.336.75.75Zm-5 3.75a.75.75 0 0 0 0-1.5h-2.5a.75.75 0 0 0 0 1.5Z"></path>
+      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
+        <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
       </svg>
-      查看数据
+      <span style="font-size: 12px">查看数据</span>
     `;
     this.viewButton.onclick = () => this.toggleDataView();
 
     // 管理缓存按钮
     this.manageButton = document.createElement('button');
-    this.manageButton.className = 'btn btn-outline-secondary btn-sm';
+    this.manageButton.className = 'btn btn-outline-secondary btn-sm px-2 py-0 d-flex flex-items-center';
+    this.manageButton.style.height = '28px';
     this.manageButton.innerHTML = `
-      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
       </svg>
-      管理缓存
+      <span style="font-size: 12px">管理缓存</span>
     `;
     this.manageButton.onclick = () => this.toggleManagePanel();
     
     buttonContainer.appendChild(this.syncButton);
     buttonContainer.appendChild(this.viewButton);
     buttonContainer.appendChild(this.manageButton);
-    this.container.appendChild(buttonContainer);
+
+    // 组装顶部容器
+    topFlexContainer.appendChild(leftContainer);
+    topFlexContainer.appendChild(buttonContainer);
+    headerContainer.appendChild(topFlexContainer);
 
     // 搜索框容器
     this.searchContainer = document.createElement('div');
-    this.searchContainer.className = 'mb-3';
+    this.searchContainer.className = 'mt-3';
+
+    // 将所有组件添加到主容器
+    this.container.appendChild(headerContainer);
     this.container.appendChild(this.searchContainer);
 
     // 数据展示面板
     this.dataPanel = document.createElement('div');
-    this.dataPanel.className = 'data-panel color-bg-subtle rounded-2 p-3 border';
+    this.dataPanel.className = 'data-panel color-bg-subtle rounded-2 p-3 border mt-3';
     this.dataPanel.style.display = 'none';
     this.dataPanel.style.maxHeight = '400px';
     this.dataPanel.style.overflowY = 'auto';
