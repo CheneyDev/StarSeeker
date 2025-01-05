@@ -96,18 +96,18 @@ function init() {
 class StarDataManager {
   constructor() {
     this.container = document.createElement('div');
-    this.container.className = 'star-data-manager p-3 border rounded-2 mb-3';
+    this.container.className = 'star-data-manager color-bg-default p-3 border rounded-2 mb-3';
     this.setupUI();
   }
 
   setupUI() {
     // Create a top container for title, status and buttons
     const headerContainer = document.createElement('div');
-    headerContainer.className = 'mb-3';
+    headerContainer.className = 'mb-2';
 
     // Create a flex container for left side (title and status) and right side (button group)
     const topFlexContainer = document.createElement('div');
-    topFlexContainer.className = 'd-flex justify-content-between align-items-start gap-3';
+    topFlexContainer.className = 'd-flex justify-content-between align-items-start gap-2';
 
     // Left container: title and status
     const leftContainer = document.createElement('div');
@@ -117,14 +117,14 @@ class StarDataManager {
     const titleContainer = document.createElement('div');
     titleContainer.className = 'd-flex flex-items-center flex-wrap gap-2';
     titleContainer.innerHTML = `
-      <h3 class="f4 color-fg-default mb-0">Star Seeker</h3>
-      <span class="color-fg-muted">GitHub Star Management Assistant</span>
+      <h3 class="h4 color-fg-default mb-0">Star Seeker</h3>
+      <span class="color-fg-muted f6">GitHub Star Management Assistant</span>
     `;
     leftContainer.appendChild(titleContainer);
 
     // Status display
     this.statusContainer = document.createElement('div');
-    this.statusContainer.className = 'color-fg-muted text-small mt-1';
+    this.statusContainer.className = 'color-fg-muted f6 mt-1';
     leftContainer.appendChild(this.statusContainer);
 
     // Right side button group container
@@ -133,37 +133,34 @@ class StarDataManager {
     
     // Sync data button
     this.syncButton = document.createElement('button');
-    this.syncButton.className = 'btn btn-primary btn-sm px-2 py-0 d-flex flex-items-center';
-    this.syncButton.style.height = '28px';
+    this.syncButton.className = 'btn btn-primary btn-sm d-inline-flex flex-items-center';
     this.syncButton.innerHTML = `
-      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
       </svg>
-      <span style="font-size: 12px">Sync Stars</span>
+      <span class="f6">Sync Stars</span>
     `;
     this.syncButton.onclick = () => this.startFetching();
     
     // View data button
     this.viewButton = document.createElement('button');
-    this.viewButton.className = 'btn btn-outline-primary btn-sm px-2 py-0 d-flex flex-items-center';
-    this.viewButton.style.height = '28px';
+    this.viewButton.className = 'btn btn-outline-primary btn-sm d-inline-flex flex-items-center';
     this.viewButton.innerHTML = `
-      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
       </svg>
-      <span style="font-size: 12px">View Data</span>
+      <span class="f6">View Data</span>
     `;
     this.viewButton.onclick = () => this.toggleDataView();
 
     // Manage cache button
     this.manageButton = document.createElement('button');
-    this.manageButton.className = 'btn btn-outline-secondary btn-sm px-2 py-0 d-flex flex-items-center';
-    this.manageButton.style.height = '28px';
+    this.manageButton.className = 'btn btn-outline-secondary btn-sm d-inline-flex flex-items-center';
     this.manageButton.innerHTML = `
-      <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
       </svg>
-      <span style="font-size: 12px">Manage Cache</span>
+      <span class="f6">Manage Cache</span>
     `;
     this.manageButton.onclick = () => this.toggleManagePanel();
     
@@ -213,11 +210,11 @@ class StarDataManager {
       const userData = data[`stars_${username}`];
       
       if (!userData) {
-        this.dataPanel.innerHTML = '<div class="color-fg-muted">No data available</div>';
+        this.dataPanel.innerHTML = '<div class="color-fg-muted f6">No data available</div>';
       } else {
         // Create table view
         const table = document.createElement('table');
-        table.className = 'width-full';
+        table.className = 'width-full color-border-muted';
         table.style.cssText = `
           border-collapse: collapse;
           table-layout: fixed;
@@ -227,10 +224,10 @@ class StarDataManager {
         // Table header
         const thead = document.createElement('thead');
         thead.innerHTML = `
-          <tr class="color-bg-subtle">
-            <th class="p-2 border" style="width: 60px">Index</th>
-            <th class="p-2 border" style="width: 35%">Repository</th>
-            <th class="p-2 border">Description</th>
+          <tr>
+            <th class="p-2 border color-border-muted text-left f6 color-fg-muted" style="width: 60px">#</th>
+            <th class="p-2 border color-border-muted text-left f6 color-fg-muted" style="width: 35%">Repository</th>
+            <th class="p-2 border color-border-muted text-left f6 color-fg-muted">Description</th>
           </tr>
         `;
         table.appendChild(thead);
@@ -239,25 +236,22 @@ class StarDataManager {
         const tbody = document.createElement('tbody');
         userData.repos.forEach((repo, index) => {
           const tr = document.createElement('tr');
-          tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
+          tr.className = 'color-bg-default';
+          tr.style.borderBottom = '1px solid var(--color-border-muted)';
           
-          // Create table cells using template literals with text overflow control styles
+          // Create table cells
           tr.innerHTML = `
-            <td class="p-2 border text-center">${index + 1}</td>
-            <td class="p-2 border" style="max-width: 0">
-              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <td class="p-2 text-left color-fg-muted f6">${index + 1}</td>
+            <td class="p-2" style="max-width: 0">
+              <div class="text-bold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <a href="https://github.com/${repo.full_name}" 
                    target="_blank" 
-                   class="Link--primary no-underline"
-                   title="${repo.full_name}">
-                  ${repo.full_name}
-                </a>
+                   class="Link--primary no-underline">${repo.full_name}</a>
               </div>
             </td>
-            <td class="p-2 border color-fg-muted" style="max-width: 0">
-              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                   title="${repo.description || 'No description'}">
-                ${repo.description || 'No description'}
+            <td class="p-2 color-fg-muted f6" style="max-width: 0">
+              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                ${repo.description || ''}
               </div>
             </td>
           `;
@@ -265,35 +259,14 @@ class StarDataManager {
         });
         table.appendChild(tbody);
         
-        const tableWrapper = document.createElement('div');
-        tableWrapper.style.cssText = `
-          width: 100%;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        `;
-        tableWrapper.appendChild(table);
-        
         this.dataPanel.innerHTML = '';
-        this.dataPanel.appendChild(tableWrapper);
+        this.dataPanel.appendChild(table);
       }
-      
       this.dataPanel.style.display = 'block';
-      this.viewButton.innerHTML = `
-        <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
-          <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
-        </svg>
-        <span style="font-size: 12px">Hide Data</span>
-      `;
-      this.viewButton.className = 'btn btn-outline-primary btn-sm selected';
+      this.viewButton.classList.add('selected');
     } else {
       this.dataPanel.style.display = 'none';
-      this.viewButton.innerHTML = `
-        <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
-          <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
-        </svg>
-        <span style="font-size: 12px">View Data</span>
-      `;
-      this.viewButton.className = 'btn btn-outline-primary btn-sm';
+      this.viewButton.classList.remove('selected');
     }
   }
 
@@ -343,30 +316,28 @@ class StarDataManager {
   async updateStatus() {
     const username = getUsernameFromUrl();
     if (!username) {
-      this.statusContainer.textContent = 'Unable to get username';
-      this.viewButton.disabled = true;
+      this.statusContainer.innerHTML = `
+        <span class="color-fg-danger f6">Unable to get username</span>
+      `;
       return;
     }
 
     const data = await chrome.storage.local.get(`stars_${username}`);
     const userData = data[`stars_${username}`];
-    
-    if (userData) {
+
+    if (!userData) {
+      this.statusContainer.innerHTML = `
+        <span class="color-fg-muted f6">No cached data for ${username}</span>
+      `;
+    } else {
       const lastUpdated = new Date(userData.lastUpdated).toLocaleString();
       this.statusContainer.innerHTML = `
-        <div class="text-small color-fg-muted">
-          Cached ${userData.repos.length} stars
-          <br>
-          Last updated: ${lastUpdated}
+        <div class="d-flex flex-items-center gap-2">
+          <span class="color-fg-success f6">✓ ${userData.repos.length} stars cached</span>
+          <span class="color-fg-muted f6">·</span>
+          <span class="color-fg-muted f6">Last updated: ${lastUpdated}</span>
         </div>
       `;
-      this.viewButton.disabled = false;
-    } else {
-      this.statusContainer.textContent = 'No stars cached';
-      this.viewButton.disabled = true;
-      if (this.dataPanel.style.display !== 'none') {
-        this.toggleDataView();
-      }
     }
   }
 
@@ -390,104 +361,51 @@ class StarDataManager {
 
   async updateManagePanelContent() {
     const allData = await chrome.storage.local.get(null);
-    const starData = Object.entries(allData)
-      .filter(([key]) => key.startsWith('stars_'))
-      .map(([key, value]) => ({
-        username: value.username,
-        count: value.repos.length,
-        lastUpdated: value.lastUpdated
-      }));
-
+    const starData = Object.entries(allData).filter(([key]) => key.startsWith('stars_'));
+    
     if (starData.length === 0) {
-      this.managePanel.innerHTML = '<div class="color-fg-muted text-center">No cached data</div>';
-    } else {
-      const table = document.createElement('table');
-      table.className = 'width-full';
-      table.style.cssText = `
-        border-collapse: collapse;
-        table-layout: fixed;
-        width: 100%;
+      this.managePanel.innerHTML = `
+        <div class="color-fg-muted f6">No cached data available</div>
       `;
-
-      // Create table header
-      const thead = document.createElement('thead');
-      thead.innerHTML = `
-        <tr class="color-bg-subtle">
-          <th class="p-2 border text-center" style="width: 30%">Username</th>
-          <th class="p-2 border text-center" style="width: 20%">Star Count</th>
-          <th class="p-2 border text-center" style="width: 35%">Last Updated</th>
-          <th class="p-2 border text-center" style="width: 15%">Action</th>
-        </tr>
-      `;
-      table.appendChild(thead);
-
-      // Create table body
-      const tbody = document.createElement('tbody');
-      starData.forEach((data, index) => {
-        const tr = document.createElement('tr');
-        tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
-        
-        // Create username cell
-        const usernameTd = document.createElement('td');
-        usernameTd.className = 'p-2 border';
-        usernameTd.style.cssText = 'max-width: 0; text-align: center;';
-        const usernameDiv = document.createElement('div');
-        usernameDiv.style.cssText = 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
-        const usernameLink = document.createElement('a');
-        usernameLink.href = `https://github.com/${data.username}?tab=stars`;
-        usernameLink.target = '_blank';
-        usernameLink.className = 'Link--primary no-underline';
-        usernameLink.title = data.username;
-        usernameLink.textContent = data.username;
-        usernameDiv.appendChild(usernameLink);
-        usernameTd.appendChild(usernameDiv);
-        
-        // Create count cell
-        const countTd = document.createElement('td');
-        countTd.className = 'p-2 border text-center';
-        countTd.textContent = data.count;
-        
-        // Create update time cell
-        const dateTd = document.createElement('td');
-        dateTd.className = 'p-2 border text-center';
-        dateTd.style.cssText = 'max-width: 0;';
-        const dateDiv = document.createElement('div');
-        dateDiv.style.cssText = 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
-        dateDiv.title = new Date(data.lastUpdated).toLocaleString();
-        dateDiv.textContent = new Date(data.lastUpdated).toLocaleString();
-        dateTd.appendChild(dateDiv);
-        
-        // Create action button cell
-        const actionTd = document.createElement('td');
-        actionTd.className = 'p-2 border text-center';
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-sm btn-danger';
-        deleteButton.textContent = 'Delete';
-        deleteButton.dataset.username = data.username;
-        deleteButton.addEventListener('click', () => this.deleteUserData(data.username));
-        actionTd.appendChild(deleteButton);
-        
-        // Add all cells to the row
-        tr.appendChild(usernameTd);
-        tr.appendChild(countTd);
-        tr.appendChild(dateTd);
-        tr.appendChild(actionTd);
-        tbody.appendChild(tr);
-      });
-      
-      table.appendChild(tbody);
-      this.managePanel.innerHTML = '';
-      this.managePanel.appendChild(table);
+      return;
     }
+
+    let content = `
+      <div class="d-flex flex-column gap-2">
+        <div class="f6 color-fg-muted mb-2">Cached star data by user:</div>
+    `;
+
+    starData.forEach(([key, value]) => {
+      const username = key.replace('stars_', '');
+      const lastUpdated = new Date(value.lastUpdated).toLocaleString();
+      const repoCount = value.repos.length;
+
+      content += `
+        <div class="Box p-3">
+          <div class="d-flex flex-justify-between flex-items-start gap-3">
+            <div class="flex-1 min-width-0">
+              <div class="d-flex flex-items-center gap-2">
+                <span class="text-bold">${username}</span>
+                <span class="Label Label--secondary">${repoCount} repos</span>
+              </div>
+              <div class="color-fg-muted f6 mt-1">Last updated: ${lastUpdated}</div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="window.starDataManager.deleteUserData('${username}')">
+              Delete
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    content += '</div>';
+    this.managePanel.innerHTML = content;
   }
 
   async deleteUserData(username) {
     await chrome.storage.local.remove(`stars_${username}`);
-    // Only update the manage panel content, not the display state
     await this.updateManagePanelContent();
-    if (username === getUsernameFromUrl()) {
-      await this.updateStatus(); // If the deleted data is for the current user, update status
-    }
+    await this.updateStatus();
   }
 }
 
