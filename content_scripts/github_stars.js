@@ -443,7 +443,7 @@ function insertSearchBox(container) {
     
     // Create a container to wrap all components
     const wrapper = document.createElement('div');
-    wrapper.className = 'star-seeker-container';
+    wrapper.className = 'star-seeker-container mt-5';
     wrapper.appendChild(dataManager.container);
     
     // Find Lists and Stars common parent container
