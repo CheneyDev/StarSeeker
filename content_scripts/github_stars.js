@@ -1,5 +1,15 @@
+function getUsernameFromUrl() {
+  const path = window.location.pathname;
+  const matches = path.match(/^\/([^/]+)/);
+  return matches ? matches[1] : null;
+}
+
 async function fetchAllStarredRepos() {
-  const username = document.querySelector('[data-hovercard-type="user"]').innerText;
+  const username = getUsernameFromUrl();
+  if (!username) {
+    throw new Error('无法获取用户名');
+  }
+
   let page = 1;
   let allRepos = [];
   
@@ -83,6 +93,123 @@ function init() {
   }, 1000);
 }
 
+class StarDataManager {
+  constructor() {
+    this.container = document.createElement('div');
+    this.container.className = 'star-data-manager p-3 border rounded-2 mb-3';
+    this.setupUI();
+  }
+
+  setupUI() {
+    // 状态显示
+    this.statusContainer = document.createElement('div');
+    this.statusContainer.className = 'mb-2';
+    this.container.appendChild(this.statusContainer);
+
+    // 操作按钮容器
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'd-flex gap-2';
+    
+    // 获取数据按钮
+    this.fetchButton = document.createElement('button');
+    this.fetchButton.className = 'btn btn-primary btn-sm';
+    this.fetchButton.textContent = '获取Star列表';
+    this.fetchButton.onclick = () => this.startFetching();
+    
+    // 刷新按钮
+    this.refreshButton = document.createElement('button');
+    this.refreshButton.className = 'btn btn-outline-primary btn-sm';
+    this.refreshButton.textContent = '刷新数据';
+    this.refreshButton.onclick = () => this.refreshData();
+    
+    // 删除按钮
+    this.deleteButton = document.createElement('button');
+    this.deleteButton.className = 'btn btn-outline-danger btn-sm';
+    this.deleteButton.textContent = '删除数据';
+    this.deleteButton.onclick = () => this.deleteData();
+    
+    buttonContainer.appendChild(this.fetchButton);
+    buttonContainer.appendChild(this.refreshButton);
+    buttonContainer.appendChild(this.deleteButton);
+    this.container.appendChild(buttonContainer);
+
+    this.updateStatus();
+  }
+
+  async startFetching() {
+    this.fetchButton.disabled = true;
+    this.statusContainer.textContent = '正在获取数据...';
+    
+    try {
+      const username = getUsernameFromUrl();
+      if (!username) {
+        throw new Error('无法获取用户名');
+      }
+
+      const repos = await fetchAllStarredRepos();
+      
+      // 保存到本地存储
+      const data = {
+        username,
+        repos,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      await chrome.storage.local.set({ [`stars_${username}`]: data });
+      this.updateStatus();
+    } catch (error) {
+      console.error('Failed to fetch stars:', error);
+      this.statusContainer.textContent = '获取数据失败: ' + error.message;
+    } finally {
+      this.fetchButton.disabled = false;
+    }
+  }
+
+  async refreshData() {
+    await this.startFetching();
+  }
+
+  async deleteData() {
+    const username = getUsernameFromUrl();
+    if (!username) {
+      this.statusContainer.textContent = '无法获取用户名';
+      return;
+    }
+    await chrome.storage.local.remove(`stars_${username}`);
+    this.updateStatus();
+  }
+
+  async updateStatus() {
+    const username = getUsernameFromUrl();
+    if (!username) {
+      this.statusContainer.textContent = '无法获取用户名';
+      this.refreshButton.disabled = true;
+      this.deleteButton.disabled = true;
+      return;
+    }
+
+    const data = await chrome.storage.local.get(`stars_${username}`);
+    const userData = data[`stars_${username}`];
+    
+    if (userData) {
+      const lastUpdated = new Date(userData.lastUpdated).toLocaleString();
+      this.statusContainer.innerHTML = `
+        <div class="text-small color-fg-muted">
+          已缓存 ${userData.repos.length} 个Star项目
+          <br>
+          最后更新: ${lastUpdated}
+        </div>
+      `;
+      this.refreshButton.disabled = false;
+      this.deleteButton.disabled = false;
+    } else {
+      this.statusContainer.textContent = '未获取Star数据';
+      this.refreshButton.disabled = true;
+      this.deleteButton.disabled = true;
+    }
+  }
+}
+
 function insertSearchBox(container) {
   // 使用唯一的类名来检查是否已存在我们的搜索框
   const existingSearches = document.querySelectorAll('.star-seeker-search-box');
@@ -96,6 +223,15 @@ function insertSearchBox(container) {
     const searchBox = new SearchBox();
     // 添加唯一的类名标识
     searchBox.container.classList.add('star-seeker-search-box');
+    
+    // 创建数据管理器
+    const dataManager = new StarDataManager();
+    
+    // 创建一个容器来包装所有组件
+    const wrapper = document.createElement('div');
+    wrapper.className = 'star-seeker-container';
+    wrapper.appendChild(dataManager.container);
+    wrapper.appendChild(searchBox.container);
     
     // 查找 Lists 和 Stars 区域的共同父容器
     const mainContent = document.querySelector('#user-profile-frame');
@@ -117,16 +253,16 @@ function insertSearchBox(container) {
     }
     
     if (firstSection) {
-      // 将搜索框插入到第一个区域的前面
-      firstSection.parentElement.insertBefore(searchBox.container, firstSection);
-      console.log('GitHub Stars AI Search: SearchBox successfully inserted before Lists/Stars section');
+      // 将包装器插入到第一个区域的前面
+      firstSection.parentElement.insertBefore(wrapper, firstSection);
+      console.log('GitHub Stars AI Search: Components successfully inserted before Lists/Stars section');
     } else {
       // 如果找不到这些区域，就插入到主容器的开头
-      mainContent.insertBefore(searchBox.container, mainContent.firstChild);
-      console.log('GitHub Stars AI Search: SearchBox inserted at the beginning of main content');
+      mainContent.insertBefore(wrapper, mainContent.firstChild);
+      console.log('GitHub Stars AI Search: Components inserted at the beginning of main content');
     }
   } catch (error) {
-    console.error('GitHub Stars AI Search: Failed to insert SearchBox', {
+    console.error('GitHub Stars AI Search: Failed to insert components', {
       error: error.toString(),
       errorStack: error.stack,
       container: container ? container.outerHTML : 'null',
