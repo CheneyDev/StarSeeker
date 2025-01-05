@@ -117,8 +117,8 @@ class StarDataManager {
     const titleContainer = document.createElement('div');
     titleContainer.className = 'd-flex flex-items-center flex-wrap gap-2';
     titleContainer.innerHTML = `
-      <h3 class="h4 color-fg-default mb-0">Star Seeker</h3>
-      <span class="color-fg-muted f6">GitHub Star Management Assistant</span>
+      <h3 class="h4 color-fg-default mb-0">StarSeeker</h3>
+      <span class="color-fg-muted f6">AI-Powered GitHub Star Search</span>
     `;
     leftContainer.appendChild(titleContainer);
 
