@@ -214,20 +214,25 @@ class StarDataManager {
       } else {
         // Create table view
         const table = document.createElement('table');
-        table.className = 'width-full color-border-muted';
+        table.className = 'width-full';
         table.style.cssText = `
-          border-collapse: collapse;
-          table-layout: fixed;
+          border-collapse: separate;
+          border-spacing: 0;
           width: 100%;
+          margin: 8px 0;
+          border: 1px solid var(--color-border-muted);
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow: var(--color-shadow-small);
         `;
         
         // Table header
         const thead = document.createElement('thead');
         thead.innerHTML = `
           <tr>
-            <th class="p-2 border color-border-muted text-left f6 color-fg-muted" style="width: 60px">#</th>
-            <th class="p-2 border color-border-muted text-left f6 color-fg-muted" style="width: 35%">Repository</th>
-            <th class="p-2 border color-border-muted text-left f6 color-fg-muted">Description</th>
+            <th class="p-3 text-left f6 color-fg-muted bg-subtle border-bottom" style="width: 60px; font-weight: 600;">#</th>
+            <th class="p-3 text-left f6 color-fg-muted bg-subtle border-bottom" style="width: 35%; font-weight: 600;">Repository</th>
+            <th class="p-3 text-left f6 color-fg-muted bg-subtle border-bottom" style="font-weight: 600;">Description</th>
           </tr>
         `;
         table.appendChild(thead);
@@ -236,20 +241,20 @@ class StarDataManager {
         const tbody = document.createElement('tbody');
         userData.repos.forEach((repo, index) => {
           const tr = document.createElement('tr');
-          tr.className = 'color-bg-default';
-          tr.style.borderBottom = '1px solid var(--color-border-muted)';
+          tr.className = 'color-bg-default hover-bg-subtle';
+          tr.style.transition = 'background-color 0.2s ease';
           
           // Create table cells
           tr.innerHTML = `
-            <td class="p-2 text-left color-fg-muted f6">${index + 1}</td>
-            <td class="p-2" style="max-width: 0">
+            <td class="p-3 text-left color-fg-muted f6 border-bottom">${index + 1}</td>
+            <td class="p-3 border-bottom" style="max-width: 0">
               <div class="text-bold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <a href="https://github.com/${repo.full_name}" 
                    target="_blank" 
-                   class="Link--primary no-underline">${repo.full_name}</a>
+                   class="Link--primary no-underline hover:underline">${repo.full_name}</a>
               </div>
             </td>
-            <td class="p-2 color-fg-muted f6" style="max-width: 0">
+            <td class="p-3 color-fg-muted f6 border-bottom" style="max-width: 0">
               <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 ${repo.description || ''}
               </div>
