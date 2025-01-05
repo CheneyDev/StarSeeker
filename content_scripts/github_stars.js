@@ -108,13 +108,19 @@ class StarDataManager {
 
     // 操作按钮容器
     const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'd-flex gap-2';
+    buttonContainer.className = 'd-flex gap-2 mb-3';
     
     // 获取数据按钮
     this.fetchButton = document.createElement('button');
     this.fetchButton.className = 'btn btn-primary btn-sm';
     this.fetchButton.textContent = '获取Star列表';
     this.fetchButton.onclick = () => this.startFetching();
+    
+    // 查看数据按钮
+    this.viewButton = document.createElement('button');
+    this.viewButton.className = 'btn btn-outline-primary btn-sm';
+    this.viewButton.textContent = '查看数据';
+    this.viewButton.onclick = () => this.toggleDataView();
     
     // 刷新按钮
     this.refreshButton = document.createElement('button');
@@ -129,11 +135,84 @@ class StarDataManager {
     this.deleteButton.onclick = () => this.deleteData();
     
     buttonContainer.appendChild(this.fetchButton);
+    buttonContainer.appendChild(this.viewButton);
     buttonContainer.appendChild(this.refreshButton);
     buttonContainer.appendChild(this.deleteButton);
     this.container.appendChild(buttonContainer);
 
+    // 数据展示面板
+    this.dataPanel = document.createElement('div');
+    this.dataPanel.className = 'data-panel color-bg-subtle rounded-2 p-3 border';
+    this.dataPanel.style.display = 'none';
+    this.dataPanel.style.maxHeight = '400px';
+    this.dataPanel.style.overflowY = 'auto';
+    this.container.appendChild(this.dataPanel);
+
     this.updateStatus();
+  }
+
+  async toggleDataView() {
+    const username = getUsernameFromUrl();
+    if (!username) {
+      this.statusContainer.textContent = '无法获取用户名';
+      return;
+    }
+
+    if (this.dataPanel.style.display === 'none') {
+      const data = await chrome.storage.local.get(`stars_${username}`);
+      const userData = data[`stars_${username}`];
+      
+      if (!userData) {
+        this.dataPanel.innerHTML = '<div class="color-fg-muted">暂无数据</div>';
+      } else {
+        // 创建表格视图
+        const table = document.createElement('table');
+        table.className = 'width-full';
+        table.style.borderCollapse = 'collapse';
+        
+        // 表头
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+          <tr class="color-bg-subtle">
+            <th class="p-2 border" style="width: 40%">仓库名称</th>
+            <th class="p-2 border">描述</th>
+          </tr>
+        `;
+        table.appendChild(thead);
+        
+        // 表格内容
+        const tbody = document.createElement('tbody');
+        userData.repos.forEach((repo, index) => {
+          const tr = document.createElement('tr');
+          tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
+          tr.innerHTML = `
+            <td class="p-2 border">
+              <a href="https://github.com/${repo.full_name}" 
+                 target="_blank" 
+                 class="Link--primary no-underline">
+                ${repo.full_name}
+              </a>
+            </td>
+            <td class="p-2 border color-fg-muted">
+              ${repo.description || '暂无描述'}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        this.dataPanel.innerHTML = '';
+        this.dataPanel.appendChild(table);
+      }
+      
+      this.dataPanel.style.display = 'block';
+      this.viewButton.textContent = '隐藏数据';
+      this.viewButton.className = 'btn btn-outline-primary btn-sm selected';
+    } else {
+      this.dataPanel.style.display = 'none';
+      this.viewButton.textContent = '查看数据';
+      this.viewButton.className = 'btn btn-outline-primary btn-sm';
+    }
   }
 
   async startFetching() {
@@ -185,6 +264,7 @@ class StarDataManager {
       this.statusContainer.textContent = '无法获取用户名';
       this.refreshButton.disabled = true;
       this.deleteButton.disabled = true;
+      this.viewButton.disabled = true;
       return;
     }
 
@@ -202,10 +282,15 @@ class StarDataManager {
       `;
       this.refreshButton.disabled = false;
       this.deleteButton.disabled = false;
+      this.viewButton.disabled = false;
     } else {
       this.statusContainer.textContent = '未获取Star数据';
       this.refreshButton.disabled = true;
       this.deleteButton.disabled = true;
+      this.viewButton.disabled = true;
+      if (this.dataPanel.style.display !== 'none') {
+        this.toggleDataView();
+      }
     }
   }
 }
