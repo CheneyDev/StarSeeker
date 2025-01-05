@@ -72,16 +72,18 @@ function init() {
 }
 
 function insertSearchBox(container) {
-  // 检查是否已存在搜索框
-  const existingSearch = document.querySelector('.ai-search-container');
-  if (existingSearch) {
-    console.log('Search box already exists, skipping insertion');
+  // 使用唯一的类名来检查是否已存在我们的搜索框
+  const existingSearches = document.querySelectorAll('.star-seeker-search-box');
+  if (existingSearches.length > 0) {
+    console.log('Star Seeker search box already exists, skipping insertion');
     return;
   }
 
   try {
     console.log('Creating new SearchBox instance');
     const searchBox = new SearchBox();
+    // 添加唯一的类名标识
+    searchBox.container.classList.add('star-seeker-search-box');
     
     // 检查是否是个人资料页
     const isProfilePage = container.closest('#user-profile-frame') !== null;
