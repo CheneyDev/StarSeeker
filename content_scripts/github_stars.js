@@ -85,40 +85,40 @@ function insertSearchBox(container) {
     // 添加唯一的类名标识
     searchBox.container.classList.add('star-seeker-search-box');
     
-    // 检查是否是个人资料页
-    const isProfilePage = container.closest('#user-profile-frame') !== null;
-    console.log('Is profile page:', isProfilePage);
-    
-    if (isProfilePage) {
-      // 在个人资料页中，将搜索框插入到标题后面
-      const starsTitle = container.querySelector('h2.f3-light');
-      if (starsTitle) {
-        console.log('Found stars title, inserting after it');
-        starsTitle.insertAdjacentElement('afterend', searchBox.container);
-      } else {
-        console.log('No stars title found, using default insertion');
-        container.appendChild(searchBox.container);
-      }
-    } else {
-      // 在其他用户页面中，将搜索框插入到标题后面
-      const starsTitle = container.querySelector('h2.f3-light');
-      if (starsTitle) {
-        console.log('Found stars title, inserting after it');
-        starsTitle.insertAdjacentElement('afterend', searchBox.container);
-      } else {
-        console.log('No stars title found, using default insertion');
-        container.appendChild(searchBox.container);
+    // 查找 Lists 和 Stars 区域的共同父容器
+    const mainContent = document.querySelector('#user-profile-frame');
+    if (!mainContent) {
+      console.log('Could not find main content container');
+      return;
+    }
+
+    // 查找所有 h2 标题
+    const headings = mainContent.querySelectorAll('h2[data-view-component="true"]');
+    let firstSection = null;
+
+    // 遍历标题找到 Lists 或 Stars
+    for (const heading of headings) {
+      if (heading.textContent.trim() === 'Lists' || heading.textContent.trim() === 'Stars') {
+        firstSection = heading;
+        break;
       }
     }
     
-    console.log('GitHub Stars AI Search: SearchBox successfully inserted');
+    if (firstSection) {
+      // 将搜索框插入到第一个区域的前面
+      firstSection.parentElement.insertBefore(searchBox.container, firstSection);
+      console.log('GitHub Stars AI Search: SearchBox successfully inserted before Lists/Stars section');
+    } else {
+      // 如果找不到这些区域，就插入到主容器的开头
+      mainContent.insertBefore(searchBox.container, mainContent.firstChild);
+      console.log('GitHub Stars AI Search: SearchBox inserted at the beginning of main content');
+    }
   } catch (error) {
     console.error('GitHub Stars AI Search: Failed to insert SearchBox', {
       error: error.toString(),
       errorStack: error.stack,
       container: container ? container.outerHTML : 'null',
-      containerHTML: container ? container.innerHTML : 'null',
-      isProfilePage: container ? container.closest('#user-profile-frame') !== null : 'null'
+      containerHTML: container ? container.innerHTML : 'null'
     });
   }
 }
