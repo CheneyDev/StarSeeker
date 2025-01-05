@@ -107,7 +107,7 @@ class SearchBox {
   showLoading() {
     this.resultsContainer.innerHTML = `
       <div class="ai-loading flex items-center justify-center p-4 text-[var(--color-fg-muted)]">
-        <svg class="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -118,13 +118,11 @@ class SearchBox {
 
   showError(error) {
     this.resultsContainer.innerHTML = `
-      <div class="error p-4 bg-[var(--color-danger-subtle)] text-[var(--color-danger-fg)] rounded-md">
-        <div class="flex items-center">
-          <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-          </svg>
-          Error: ${error.message}
-        </div>
+      <div class="error p-3 text-sm text-[var(--color-danger-fg)] flex items-center gap-2">
+        <span class="inline-block w-[18px] h-[18px] rounded-full bg-[var(--color-danger-fg)] text-white flex items-center justify-center text-xs font-medium">
+          !
+        </span>
+        ${error.message}
       </div>
     `;
   }
@@ -157,19 +155,19 @@ class SearchBox {
         const [author, repo] = link.textContent.split('/').map(s => s.trim());
         
         resultItem.innerHTML = `
-          <h3 class="text-lg font-semibold mb-2">
-            <a href="${link.href}" class="text-[var(--color-accent-fg)] hover:underline" target="_blank" rel="noopener noreferrer">
-              ${author} / <strong>${repo}</strong>
-            </a>
-          </h3>
-          <p class="text-[var(--color-fg-muted)] mb-3">${description}</p>
-          <div class="search-result-meta flex items-center text-sm text-[var(--color-fg-muted)]">
-            <span class="flex items-center">
-              <svg class="h-4 w-4 mr-1" aria-hidden="true" viewBox="0 0 16 16" version="1.1">
+          <div class="flex flex-col gap-2">
+            <h3 class="text-lg font-semibold">
+              <a href="${link.href}" class="text-[var(--color-accent-fg)] hover:underline" target="_blank" rel="noopener noreferrer">
+                ${author} / <strong>${repo}</strong>
+              </a>
+            </h3>
+            <p class="text-[var(--color-fg-muted)]">${description}</p>
+            <div class="flex items-center gap-1 text-xs text-[var(--color-fg-muted)]">
+              <svg class="h-3.5 w-3.5" aria-hidden="true" viewBox="0 0 16 16" version="1.1">
                 <path fill="currentColor" d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path>
               </svg>
-              Starred
-            </span>
+              <span>Starred</span>
+            </div>
           </div>
         `;
         
