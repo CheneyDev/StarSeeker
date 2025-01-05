@@ -122,19 +122,34 @@ class StarDataManager {
     // 同步数据按钮（合并获取和刷新功能）
     this.syncButton = document.createElement('button');
     this.syncButton.className = 'btn btn-primary btn-sm';
-    this.syncButton.textContent = '同步Star数据';
+    this.syncButton.innerHTML = `
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+        <path fill="currentColor" d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
+      </svg>
+      同步Star数据
+    `;
     this.syncButton.onclick = () => this.startFetching();
     
     // 查看数据按钮
     this.viewButton = document.createElement('button');
     this.viewButton.className = 'btn btn-outline-primary btn-sm';
-    this.viewButton.textContent = '查看数据';
+    this.viewButton.innerHTML = `
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+        <path fill="currentColor" d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25Zm11.75 3.75a.75.75 0 0 0 0-1.5h-8.5a.75.75 0 0 0 0 1.5ZM11 8a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1 0-1.5h4.5c.414 0 .75.336.75.75Zm-5 3.75a.75.75 0 0 0 0-1.5h-2.5a.75.75 0 0 0 0 1.5Z"></path>
+      </svg>
+      查看数据
+    `;
     this.viewButton.onclick = () => this.toggleDataView();
 
     // 管理缓存按钮
     this.manageButton = document.createElement('button');
     this.manageButton.className = 'btn btn-outline-secondary btn-sm';
-    this.manageButton.textContent = '管理缓存';
+    this.manageButton.innerHTML = `
+      <svg class="octicon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+        <path fill="currentColor" d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
+      </svg>
+      管理缓存
+    `;
     this.manageButton.onclick = () => this.toggleManagePanel();
     
     buttonContainer.appendChild(this.syncButton);
