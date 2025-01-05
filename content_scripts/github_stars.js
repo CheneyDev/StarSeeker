@@ -133,11 +133,18 @@ class StarDataManager {
     this.deleteButton.className = 'btn btn-outline-danger btn-sm';
     this.deleteButton.textContent = '删除数据';
     this.deleteButton.onclick = () => this.deleteData();
+
+    // 管理缓存按钮
+    this.manageButton = document.createElement('button');
+    this.manageButton.className = 'btn btn-outline-secondary btn-sm';
+    this.manageButton.textContent = '管理缓存';
+    this.manageButton.onclick = () => this.toggleManagePanel();
     
     buttonContainer.appendChild(this.fetchButton);
     buttonContainer.appendChild(this.viewButton);
     buttonContainer.appendChild(this.refreshButton);
     buttonContainer.appendChild(this.deleteButton);
+    buttonContainer.appendChild(this.manageButton);
     this.container.appendChild(buttonContainer);
 
     // 数据展示面板
@@ -147,6 +154,12 @@ class StarDataManager {
     this.dataPanel.style.maxHeight = '400px';
     this.dataPanel.style.overflowY = 'auto';
     this.container.appendChild(this.dataPanel);
+
+    // 缓存管理面板
+    this.managePanel = document.createElement('div');
+    this.managePanel.className = 'manage-panel color-bg-subtle rounded-2 p-3 border mt-3';
+    this.managePanel.style.display = 'none';
+    this.container.appendChild(this.managePanel);
 
     this.updateStatus();
   }
@@ -316,7 +329,139 @@ class StarDataManager {
       }
     }
   }
+
+  async toggleManagePanel() {
+    // 如果数据面板是打开的，先关闭它
+    if (this.dataPanel.style.display !== 'none') {
+      this.dataPanel.style.display = 'none';
+      this.viewButton.textContent = '查看数据';
+      this.viewButton.className = 'btn btn-outline-primary btn-sm';
+    }
+
+    if (this.managePanel.style.display === 'none') {
+      await this.updateManagePanelContent();
+      this.managePanel.style.display = 'block';
+      this.manageButton.className = 'btn btn-outline-secondary btn-sm selected';
+    } else {
+      this.managePanel.style.display = 'none';
+      this.manageButton.className = 'btn btn-outline-secondary btn-sm';
+    }
+  }
+
+  async updateManagePanelContent() {
+    const allData = await chrome.storage.local.get(null);
+    const starData = Object.entries(allData)
+      .filter(([key]) => key.startsWith('stars_'))
+      .map(([key, value]) => ({
+        username: value.username,
+        count: value.repos.length,
+        lastUpdated: value.lastUpdated
+      }));
+
+    if (starData.length === 0) {
+      this.managePanel.innerHTML = '<div class="color-fg-muted text-center">暂无缓存数据</div>';
+    } else {
+      const table = document.createElement('table');
+      table.className = 'width-full';
+      table.style.cssText = `
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+      `;
+
+      // 创建表头
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr class="color-bg-subtle">
+          <th class="p-2 border text-center" style="width: 30%">用户名</th>
+          <th class="p-2 border text-center" style="width: 20%">Star数量</th>
+          <th class="p-2 border text-center" style="width: 35%">最后更新</th>
+          <th class="p-2 border text-center" style="width: 15%">操作</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      // 创建表格内容
+      const tbody = document.createElement('tbody');
+      starData.forEach((data, index) => {
+        const tr = document.createElement('tr');
+        tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
+        
+        // 创建用户名单元格
+        const usernameTd = document.createElement('td');
+        usernameTd.className = 'p-2 border';
+        usernameTd.style.cssText = 'max-width: 0; text-align: center;';
+        const usernameDiv = document.createElement('div');
+        usernameDiv.style.cssText = 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
+        const usernameLink = document.createElement('a');
+        usernameLink.href = `https://github.com/${data.username}?tab=stars`;
+        usernameLink.target = '_blank';
+        usernameLink.className = 'Link--primary no-underline';
+        usernameLink.title = data.username;
+        usernameLink.textContent = data.username;
+        usernameDiv.appendChild(usernameLink);
+        usernameTd.appendChild(usernameDiv);
+        
+        // 创建数量单元格
+        const countTd = document.createElement('td');
+        countTd.className = 'p-2 border text-center';
+        countTd.textContent = data.count;
+        
+        // 创建更新时间单元格
+        const dateTd = document.createElement('td');
+        dateTd.className = 'p-2 border text-center';
+        dateTd.style.cssText = 'max-width: 0;';
+        const dateDiv = document.createElement('div');
+        dateDiv.style.cssText = 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;';
+        dateDiv.title = new Date(data.lastUpdated).toLocaleString();
+        dateDiv.textContent = new Date(data.lastUpdated).toLocaleString();
+        dateTd.appendChild(dateDiv);
+        
+        // 创建操作按钮单元格
+        const actionTd = document.createElement('td');
+        actionTd.className = 'p-2 border text-center';
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-sm btn-danger';
+        deleteButton.textContent = '删除';
+        deleteButton.dataset.username = data.username;
+        deleteButton.addEventListener('click', () => this.deleteUserData(data.username));
+        actionTd.appendChild(deleteButton);
+        
+        // 添加所有单元格到行
+        tr.appendChild(usernameTd);
+        tr.appendChild(countTd);
+        tr.appendChild(dateTd);
+        tr.appendChild(actionTd);
+        tbody.appendChild(tr);
+      });
+      
+      table.appendChild(tbody);
+      this.managePanel.innerHTML = '';
+      this.managePanel.appendChild(table);
+    }
+  }
+
+  async deleteUserData(username) {
+    await chrome.storage.local.remove(`stars_${username}`);
+    // 只更新管理面板的内容，而不是切换显示状态
+    await this.updateManagePanelContent();
+    if (username === getUsernameFromUrl()) {
+      await this.updateStatus(); // 如果删除的是当前用户的数据，更新状态
+    }
+  }
 }
+
+// 在文件末尾添加事件监听器
+document.addEventListener('deleteUserStars', async (event) => {
+  const username = event.detail;
+  const managers = document.querySelectorAll('.star-data-manager');
+  managers.forEach(manager => {
+    const dataManager = manager.__dataManager;
+    if (dataManager) {
+      dataManager.deleteUserData(username);
+    }
+  });
+});
 
 function insertSearchBox(container) {
   // 使用唯一的类名来检查是否已存在我们的搜索框
@@ -329,13 +474,12 @@ function insertSearchBox(container) {
   try {
     console.log('Creating new SearchBox instance');
     const searchBox = new SearchBox();
-    // 添加唯一的类名标识
     searchBox.container.classList.add('star-seeker-search-box');
     
-    // 创建数据管理器
     const dataManager = new StarDataManager();
+    // 保存实例引用以便事件处理
+    dataManager.container.__dataManager = dataManager;
     
-    // 创建一个容器来包装所有组件
     const wrapper = document.createElement('div');
     wrapper.className = 'star-seeker-container';
     wrapper.appendChild(dataManager.container);
