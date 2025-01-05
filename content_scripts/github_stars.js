@@ -5,7 +5,12 @@ async function fetchAllStarredRepos() {
   
   while (true) {
     const response = await fetch(
-      `https://api.github.com/users/${username}/starred?page=${page}&per_page=100`
+      `https://api.github.com/users/${username}/starred?page=${page}&per_page=100`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github+json'
+        }
+      }
     );
     
     if (!response.ok) {
@@ -19,7 +24,14 @@ async function fetchAllStarredRepos() {
     page++;
   }
   
-  return allRepos;
+  return processStarredRepos(allRepos);
+}
+
+function processStarredRepos(repos) {
+  return repos.map(repo => ({
+    full_name: repo.full_name,
+    description: repo.description || ''  // 如果description为null，使用空字符串
+  }));
 }
 
 function init() {
