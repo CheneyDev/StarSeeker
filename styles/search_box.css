@@ -292,18 +292,6 @@
   background-color: var(--color-canvas-default, #ffffff);
 }
 
-.FormControl-input-wrap--leadingVisual {
-  padding-left: 32px;
-}
-
-.FormControl-input-leadingVisualWrap {
-  position: absolute;
-  left: 8px;
-  display: flex;
-  pointer-events: none;
-  color: var(--color-fg-subtle, #6e7781);
-}
-
 .FormControl-input {
   width: 100%;
   padding: 5px 12px;
