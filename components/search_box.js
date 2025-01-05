@@ -53,18 +53,18 @@ class SearchBox {
       <div class="search-results mt-4 space-y-4"></div>
     `;
 
-    // 获取元素引用
+    // Get element references
     this.input = this.container.querySelector('input[type="search"]');
     this.resultsContainer = this.container.querySelector('.search-results');
     this.clearButton = this.container.querySelector('.search-clear-button');
     this.searchButton = this.container.querySelector('.Button--secondary');
 
-    // 监听输入框变化
+    // Listen for input changes
     this.input.addEventListener('input', () => {
       this.clearButton.style.display = this.input.value ? 'flex' : 'none';
     });
 
-    // 清除按钮点击事件
+    // Clear button click event
     this.clearButton.addEventListener('click', () => {
       this.input.value = '';
       this.clearButton.style.display = 'none';
@@ -72,12 +72,12 @@ class SearchBox {
       this.input.focus();
     });
 
-    // 搜索按钮点击事件
+    // Search button click event
     this.searchButton.addEventListener('click', () => {
       this.handleSearch();
     });
 
-    // 输入框回车事件
+    // Input enter key event
     this.input.addEventListener('keypress', async (e) => {
       if (e.key === 'Enter') {
         await this.handleSearch();

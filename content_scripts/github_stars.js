@@ -7,7 +7,7 @@ function getUsernameFromUrl() {
 async function fetchAllStarredRepos() {
   const username = getUsernameFromUrl();
   if (!username) {
-    throw new Error('无法获取用户名');
+    throw new Error('Unable to get username');
   }
 
   let page = 1;
@@ -40,12 +40,12 @@ async function fetchAllStarredRepos() {
 function processStarredRepos(repos) {
   return repos.map(repo => ({
     full_name: repo.full_name,
-    description: repo.description || ''  // 如果description为null，使用空字符串
+    description: repo.description || ''  // Use empty string if description is null
   }));
 }
 
 function init() {
-  // 检查是否在 Stars 页面
+  // Check if on Stars page
   const isStarsPage = window.location.href.includes('?tab=stars') || 
                      window.location.href.endsWith('/stars');
   
@@ -53,20 +53,20 @@ function init() {
     return;
   }
 
-  // 确保 SearchBox 类已经加载
+  // Ensure SearchBox class is loaded
   if (typeof SearchBox === 'undefined') {
     console.error('GitHub Stars AI Search: SearchBox class is not loaded');
     return;
   }
 
-  // 等待一小段时间确保 DOM 完全加载
+  // Wait for DOM to be fully loaded
   setTimeout(() => {
     try {
-      // 首先尝试查找个人资料页的搜索框容器
+      // First try to find search box container in profile page
       const searchContainer = document.querySelector('#user-profile-frame');
       if (searchContainer) {
         console.log('Found profile page container');
-        // 在个人资料页中
+        // In profile page
         const titleContainer = searchContainer.querySelector('.col-lg-12');
         if (titleContainer) {
           console.log('Found title container in profile page');
@@ -75,7 +75,7 @@ function init() {
         }
       }
 
-      // 如果不是个人资料页，尝试其他用户页面的布局
+      // If not in profile page, try other user page layout
       const starsTitle = document.querySelector('h2.f3-light');
       if (starsTitle) {
         console.log('Found stars title in other user page');
@@ -101,37 +101,37 @@ class StarDataManager {
   }
 
   setupUI() {
-    // 创建一个顶部容器来包含标题、状态和按钮
+    // Create a top container for title, status and buttons
     const headerContainer = document.createElement('div');
     headerContainer.className = 'mb-3';
 
-    // 创建一个 flex 容器来包含左侧的标题和状态，以及右侧的按钮组
+    // Create a flex container for left side (title and status) and right side (button group)
     const topFlexContainer = document.createElement('div');
     topFlexContainer.className = 'd-flex justify-content-between align-items-start gap-3';
 
-    // 左侧容器：标题和状态
+    // Left container: title and status
     const leftContainer = document.createElement('div');
     leftContainer.className = 'flex-1 min-width-0';
 
-    // 标题容器
+    // Title container
     const titleContainer = document.createElement('div');
     titleContainer.className = 'd-flex flex-items-center flex-wrap gap-2';
     titleContainer.innerHTML = `
       <h3 class="f4 color-fg-default mb-0">Star Seeker</h3>
-      <span class="color-fg-muted">GitHub Star 智能管理助手</span>
+      <span class="color-fg-muted">GitHub Star Management Assistant</span>
     `;
     leftContainer.appendChild(titleContainer);
 
-    // 状态显示
+    // Status display
     this.statusContainer = document.createElement('div');
     this.statusContainer.className = 'color-fg-muted text-small mt-1';
     leftContainer.appendChild(this.statusContainer);
 
-    // 右侧按钮组容器
+    // Right side button group container
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'd-flex flex-wrap gap-2 flex-shrink-0';
     
-    // 同步数据按钮
+    // Sync data button
     this.syncButton = document.createElement('button');
     this.syncButton.className = 'btn btn-primary btn-sm px-2 py-0 d-flex flex-items-center';
     this.syncButton.style.height = '28px';
@@ -139,11 +139,11 @@ class StarDataManager {
       <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
       </svg>
-      <span style="font-size: 12px">同步Star数据</span>
+      <span style="font-size: 12px">Sync Stars</span>
     `;
     this.syncButton.onclick = () => this.startFetching();
     
-    // 查看数据按钮
+    // View data button
     this.viewButton = document.createElement('button');
     this.viewButton.className = 'btn btn-outline-primary btn-sm px-2 py-0 d-flex flex-items-center';
     this.viewButton.style.height = '28px';
@@ -151,11 +151,11 @@ class StarDataManager {
       <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
       </svg>
-      <span style="font-size: 12px">查看数据</span>
+      <span style="font-size: 12px">View Data</span>
     `;
     this.viewButton.onclick = () => this.toggleDataView();
 
-    // 管理缓存按钮
+    // Manage cache button
     this.manageButton = document.createElement('button');
     this.manageButton.className = 'btn btn-outline-secondary btn-sm px-2 py-0 d-flex flex-items-center';
     this.manageButton.style.height = '28px';
@@ -163,7 +163,7 @@ class StarDataManager {
       <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
         <path fill="currentColor" d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
       </svg>
-      <span style="font-size: 12px">管理缓存</span>
+      <span style="font-size: 12px">Manage Cache</span>
     `;
     this.manageButton.onclick = () => this.toggleManagePanel();
     
@@ -204,7 +204,7 @@ class StarDataManager {
   async toggleDataView() {
     const username = getUsernameFromUrl();
     if (!username) {
-      this.statusContainer.textContent = '无法获取用户名';
+      this.statusContainer.textContent = 'Unable to get username';
       return;
     }
 
@@ -213,9 +213,9 @@ class StarDataManager {
       const userData = data[`stars_${username}`];
       
       if (!userData) {
-        this.dataPanel.innerHTML = '<div class="color-fg-muted">暂无数据</div>';
+        this.dataPanel.innerHTML = '<div class="color-fg-muted">No data available</div>';
       } else {
-        // 创建表格视图
+        // Create table view
         const table = document.createElement('table');
         table.className = 'width-full';
         table.style.cssText = `
@@ -224,24 +224,24 @@ class StarDataManager {
           width: 100%;
         `;
         
-        // 表头
+        // Table header
         const thead = document.createElement('thead');
         thead.innerHTML = `
           <tr class="color-bg-subtle">
-            <th class="p-2 border" style="width: 60px">序号</th>
-            <th class="p-2 border" style="width: 35%">仓库名称</th>
-            <th class="p-2 border">描述</th>
+            <th class="p-2 border" style="width: 60px">Index</th>
+            <th class="p-2 border" style="width: 35%">Repository</th>
+            <th class="p-2 border">Description</th>
           </tr>
         `;
         table.appendChild(thead);
         
-        // 表格内容
+        // Table body
         const tbody = document.createElement('tbody');
         userData.repos.forEach((repo, index) => {
           const tr = document.createElement('tr');
           tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
           
-          // 使用模板字符串创建单元格，添加文本溢出控制的样式
+          // Create table cells using template literals with text overflow control styles
           tr.innerHTML = `
             <td class="p-2 border text-center">${index + 1}</td>
             <td class="p-2 border" style="max-width: 0">
@@ -256,8 +256,8 @@ class StarDataManager {
             </td>
             <td class="p-2 border color-fg-muted" style="max-width: 0">
               <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                   title="${repo.description || '暂无描述'}">
-                ${repo.description || '暂无描述'}
+                   title="${repo.description || 'No description'}">
+                ${repo.description || 'No description'}
               </div>
             </td>
           `;
@@ -282,7 +282,7 @@ class StarDataManager {
         <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
           <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
         </svg>
-        <span style="font-size: 12px">隐藏数据</span>
+        <span style="font-size: 12px">Hide Data</span>
       `;
       this.viewButton.className = 'btn btn-outline-primary btn-sm selected';
     } else {
@@ -291,7 +291,7 @@ class StarDataManager {
         <svg class="octicon" style="margin-right: 4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14">
           <path fill="currentColor" d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path>
         </svg>
-        <span style="font-size: 12px">查看数据</span>
+        <span style="font-size: 12px">View Data</span>
       `;
       this.viewButton.className = 'btn btn-outline-primary btn-sm';
     }
@@ -299,17 +299,17 @@ class StarDataManager {
 
   async startFetching() {
     this.syncButton.disabled = true;
-    this.statusContainer.textContent = '正在获取数据...';
+    this.statusContainer.textContent = 'Syncing data...';
     
     try {
       const username = getUsernameFromUrl();
       if (!username) {
-        throw new Error('无法获取用户名');
+        throw new Error('Unable to get username');
       }
 
       const repos = await fetchAllStarredRepos();
       
-      // 保存到本地存储
+      // Save to local storage
       const data = {
         username,
         repos,
@@ -320,7 +320,7 @@ class StarDataManager {
       this.updateStatus();
     } catch (error) {
       console.error('Failed to fetch stars:', error);
-      this.statusContainer.textContent = '获取数据失败: ' + error.message;
+      this.statusContainer.textContent = 'Failed to sync stars: ' + error.message;
     } finally {
       this.syncButton.disabled = false;
     }
@@ -333,7 +333,7 @@ class StarDataManager {
   async deleteData() {
     const username = getUsernameFromUrl();
     if (!username) {
-      this.statusContainer.textContent = '无法获取用户名';
+      this.statusContainer.textContent = 'Unable to get username';
       return;
     }
     await chrome.storage.local.remove(`stars_${username}`);
@@ -343,7 +343,7 @@ class StarDataManager {
   async updateStatus() {
     const username = getUsernameFromUrl();
     if (!username) {
-      this.statusContainer.textContent = '无法获取用户名';
+      this.statusContainer.textContent = 'Unable to get username';
       this.viewButton.disabled = true;
       return;
     }
@@ -355,14 +355,14 @@ class StarDataManager {
       const lastUpdated = new Date(userData.lastUpdated).toLocaleString();
       this.statusContainer.innerHTML = `
         <div class="text-small color-fg-muted">
-          已缓存 ${userData.repos.length} 个Star项目
+          Cached ${userData.repos.length} stars
           <br>
-          最后更新: ${lastUpdated}
+          Last updated: ${lastUpdated}
         </div>
       `;
       this.viewButton.disabled = false;
     } else {
-      this.statusContainer.textContent = '未获取Star数据';
+      this.statusContainer.textContent = 'No stars cached';
       this.viewButton.disabled = true;
       if (this.dataPanel.style.display !== 'none') {
         this.toggleDataView();
@@ -371,10 +371,10 @@ class StarDataManager {
   }
 
   async toggleManagePanel() {
-    // 如果数据面板是打开的，先关闭它
+    // If data panel is open, first close it
     if (this.dataPanel.style.display !== 'none') {
       this.dataPanel.style.display = 'none';
-      this.viewButton.textContent = '查看数据';
+      this.viewButton.textContent = 'View Data';
       this.viewButton.className = 'btn btn-outline-primary btn-sm';
     }
 
@@ -399,7 +399,7 @@ class StarDataManager {
       }));
 
     if (starData.length === 0) {
-      this.managePanel.innerHTML = '<div class="color-fg-muted text-center">暂无缓存数据</div>';
+      this.managePanel.innerHTML = '<div class="color-fg-muted text-center">No cached data</div>';
     } else {
       const table = document.createElement('table');
       table.className = 'width-full';
@@ -409,25 +409,25 @@ class StarDataManager {
         width: 100%;
       `;
 
-      // 创建表头
+      // Create table header
       const thead = document.createElement('thead');
       thead.innerHTML = `
         <tr class="color-bg-subtle">
-          <th class="p-2 border text-center" style="width: 30%">用户名</th>
-          <th class="p-2 border text-center" style="width: 20%">Star数量</th>
-          <th class="p-2 border text-center" style="width: 35%">最后更新</th>
-          <th class="p-2 border text-center" style="width: 15%">操作</th>
+          <th class="p-2 border text-center" style="width: 30%">Username</th>
+          <th class="p-2 border text-center" style="width: 20%">Star Count</th>
+          <th class="p-2 border text-center" style="width: 35%">Last Updated</th>
+          <th class="p-2 border text-center" style="width: 15%">Action</th>
         </tr>
       `;
       table.appendChild(thead);
 
-      // 创建表格内容
+      // Create table body
       const tbody = document.createElement('tbody');
       starData.forEach((data, index) => {
         const tr = document.createElement('tr');
         tr.className = index % 2 === 0 ? 'color-bg-default' : 'color-bg-subtle';
         
-        // 创建用户名单元格
+        // Create username cell
         const usernameTd = document.createElement('td');
         usernameTd.className = 'p-2 border';
         usernameTd.style.cssText = 'max-width: 0; text-align: center;';
@@ -442,12 +442,12 @@ class StarDataManager {
         usernameDiv.appendChild(usernameLink);
         usernameTd.appendChild(usernameDiv);
         
-        // 创建数量单元格
+        // Create count cell
         const countTd = document.createElement('td');
         countTd.className = 'p-2 border text-center';
         countTd.textContent = data.count;
         
-        // 创建更新时间单元格
+        // Create update time cell
         const dateTd = document.createElement('td');
         dateTd.className = 'p-2 border text-center';
         dateTd.style.cssText = 'max-width: 0;';
@@ -457,17 +457,17 @@ class StarDataManager {
         dateDiv.textContent = new Date(data.lastUpdated).toLocaleString();
         dateTd.appendChild(dateDiv);
         
-        // 创建操作按钮单元格
+        // Create action button cell
         const actionTd = document.createElement('td');
         actionTd.className = 'p-2 border text-center';
         const deleteButton = document.createElement('button');
         deleteButton.className = 'btn btn-sm btn-danger';
-        deleteButton.textContent = '删除';
+        deleteButton.textContent = 'Delete';
         deleteButton.dataset.username = data.username;
         deleteButton.addEventListener('click', () => this.deleteUserData(data.username));
         actionTd.appendChild(deleteButton);
         
-        // 添加所有单元格到行
+        // Add all cells to the row
         tr.appendChild(usernameTd);
         tr.appendChild(countTd);
         tr.appendChild(dateTd);
@@ -483,15 +483,15 @@ class StarDataManager {
 
   async deleteUserData(username) {
     await chrome.storage.local.remove(`stars_${username}`);
-    // 只更新管理面板的内容，而不是切换显示状态
+    // Only update the manage panel content, not the display state
     await this.updateManagePanelContent();
     if (username === getUsernameFromUrl()) {
-      await this.updateStatus(); // 如果删除的是当前用户的数据，更新状态
+      await this.updateStatus(); // If the deleted data is for the current user, update status
     }
   }
 }
 
-// 在文件末尾添加事件监听器
+// Add event listener at the end of the file
 document.addEventListener('deleteUserStars', async (event) => {
   const username = event.detail;
   const managers = document.querySelectorAll('.star-data-manager');
@@ -504,7 +504,7 @@ document.addEventListener('deleteUserStars', async (event) => {
 });
 
 function insertSearchBox(container) {
-  // 使用唯一的类名来检查是否已存在我们的搜索框
+  // Use a unique class name to check if our search box already exists
   const existingSearches = document.querySelectorAll('.star-seeker-search-box');
   if (existingSearches.length > 0) {
     console.log('Star Seeker search box already exists, skipping insertion');
@@ -517,29 +517,29 @@ function insertSearchBox(container) {
     searchBox.container.classList.add('star-seeker-search-box');
     
     const dataManager = new StarDataManager();
-    // 保存实例引用以便事件处理
+    // Save instance reference for event handling
     dataManager.container.__dataManager = dataManager;
     
-    // 将搜索框添加到数据管理器的搜索容器中
+    // Add search box to search container of data manager
     dataManager.searchContainer.appendChild(searchBox.container);
     
-    // 创建一个容器来包装所有组件
+    // Create a container to wrap all components
     const wrapper = document.createElement('div');
     wrapper.className = 'star-seeker-container';
     wrapper.appendChild(dataManager.container);
     
-    // 查找 Lists 和 Stars 区域的共同父容器
+    // Find Lists and Stars common parent container
     const mainContent = document.querySelector('#user-profile-frame');
     if (!mainContent) {
       console.log('Could not find main content container');
       return;
     }
 
-    // 查找所有 h2 标题
+    // Find all h2 headings
     const headings = mainContent.querySelectorAll('h2[data-view-component="true"]');
     let firstSection = null;
 
-    // 遍历标题找到 Lists 或 Stars
+    // Loop through headings to find Lists or Stars
     for (const heading of headings) {
       if (heading.textContent.trim() === 'Lists' || heading.textContent.trim() === 'Stars') {
         firstSection = heading;
@@ -548,11 +548,11 @@ function insertSearchBox(container) {
     }
     
     if (firstSection) {
-      // 将包装器插入到第一个区域的前面
+      // Insert wrapper before first section
       firstSection.parentElement.insertBefore(wrapper, firstSection);
       console.log('GitHub Stars AI Search: Components successfully inserted before Lists/Stars section');
     } else {
-      // 如果找不到这些区域，就插入到主容器的开头
+      // If no Lists or Stars sections, insert at the beginning of main content
       mainContent.insertBefore(wrapper, mainContent.firstChild);
       console.log('GitHub Stars AI Search: Components inserted at the beginning of main content');
     }
@@ -566,20 +566,20 @@ function insertSearchBox(container) {
   }
 }
 
-// 在页面加载完成后执行初始化
+// Initialize when document is fully loaded
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
 }
 
-// 监听 Turbo 导航事件
+// Listen for Turbo navigation events
 document.addEventListener('turbo:load', init);
 
-// 为了向后兼容，也监听 PJAX 事件
+// Also listen for PJAX events for backward compatibility
 document.addEventListener('pjax:complete', init);
 
-// 监听 URL 变化
+// Listen for URL changes
 let lastUrl = location.href; 
 new MutationObserver(() => {
   const url = location.href;

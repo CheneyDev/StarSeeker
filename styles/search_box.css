@@ -8,9 +8,54 @@
   gap: 8px;
 }
 
-/* 在个人资料页中的特殊样式 */
-.d-lg-flex.gutter-lg.mt-5 .ai-search-container {
-  margin: 24px 0;
+/* Special styles for profile page */
+.star-seeker-search-box {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Input field styles in profile page */
+.star-seeker-search-box .search-input {
+  width: 100%;
+  padding: 5px 30px 5px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-fg-default);
+  vertical-align: middle;
+  background-color: var(--color-canvas-default);
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  outline: none;
+  box-shadow: var(--color-primer-shadow-inset);
+}
+
+/* Search button styles */
+.star-seeker-search-box .search-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  color: var(--color-fg-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Clear button styles */
+.star-seeker-search-box .clear-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  color: var(--color-fg-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
 }
 
 .ai-search-wrapper {
@@ -214,13 +259,11 @@
   }
 }
 
-/* 搜索结果项样式 */
+/* Search result item styles */
 .search-result-item {
-  padding: 16px;
-  border-radius: 8px;
-  margin: 8px;
-  background-color: var(--color-canvas-subtle);
-  transition: all 0.2s ease;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--color-border-muted);
+  cursor: pointer;
 }
 
 .search-result-item:hover {
