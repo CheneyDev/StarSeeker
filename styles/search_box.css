@@ -249,4 +249,198 @@
   margin-top: 12px;
   font-size: 12px;
   color: var(--color-fg-subtle);
+}
+
+.subnav-search {
+  position: relative;
+  flex: auto;
+  max-width: 100%;
+}
+
+.FormControl-spacingWrapper {
+  margin: 8px 0;
+}
+
+.FormControl-horizontalGroup {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.FormControl {
+  position: relative;
+  margin: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.FormControl-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  background-color: var(--color-canvas-default, #ffffff);
+}
+
+.FormControl-input-wrap--leadingVisual {
+  padding-left: 32px;
+}
+
+.FormControl-input-leadingVisualWrap {
+  position: absolute;
+  left: 8px;
+  display: flex;
+  pointer-events: none;
+  color: var(--color-fg-subtle, #6e7781);
+}
+
+.FormControl-input {
+  width: 100%;
+  padding: 5px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-fg-default, #1F2328);
+  vertical-align: middle;
+  background-color: var(--color-canvas-default, #ffffff);
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  outline: none;
+  box-shadow: var(--color-primer-shadow-inset, inset 0 1px 0 rgba(208,215,222,0.2));
+}
+
+.FormControl-input:focus {
+  border-color: var(--color-accent-fg, #0969da);
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--color-accent-fg, #0969da);
+}
+
+.search-clear-button {
+  position: absolute;
+  right: 8px;
+  display: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--color-fg-subtle, #6e7781);
+  cursor: pointer;
+}
+
+.search-clear-button:hover {
+  color: var(--color-fg-muted, #424a53);
+}
+
+.search-results {
+  margin-top: 8px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .FormControl-input {
+    background-color: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-default, #30363d);
+    color: var(--color-fg-default, #c9d1d9);
+  }
+
+  .FormControl-input:focus {
+    border-color: var(--color-accent-fg, #58a6ff);
+    box-shadow: inset 0 0 0 1px var(--color-accent-fg, #58a6ff);
+  }
+
+  .FormControl-input-leadingVisualWrap {
+    color: var(--color-fg-subtle, #8b949e);
+  }
+
+  .search-clear-button {
+    color: var(--color-fg-subtle, #8b949e);
+  }
+
+  .search-clear-button:hover {
+    color: var(--color-fg-muted, #8b949e);
+  }
+}
+
+.Button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid;
+  border-radius: 6px;
+  appearance: none;
+  text-decoration: none;
+  margin-left: 8px;
+  height: 32px;
+}
+
+.Button:hover {
+  text-decoration: none;
+}
+
+.Button--secondary {
+  color: var(--color-btn-text);
+  background-color: var(--color-btn-bg, #f6f8fa);
+  border-color: var(--color-btn-border, rgba(31,35,40,0.15));
+  box-shadow: var(--color-btn-shadow, 0 1px 0 rgba(31,35,40,0.04)), var(--color-btn-inset-shadow, inset 0 1px 0 rgba(255,255,255,0.25));
+  transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+  transition-property: color,background-color,border-color;
+}
+
+.Button--secondary:hover {
+  background-color: var(--color-btn-hover-bg, #f3f4f6);
+  border-color: var(--color-btn-hover-border, rgba(31,35,40,0.15));
+}
+
+.Button--secondary:active {
+  background-color: var(--color-btn-active-bg, hsla(220,14%,93%,1));
+  border-color: var(--color-btn-active-border, rgba(31,35,40,0.15));
+}
+
+.Button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Button-label {
+  display: inline-block;
+}
+
+/* Dark mode support for the button */
+@media (prefers-color-scheme: dark) {
+  .Button--secondary {
+    color: var(--color-btn-text, #c9d1d9);
+    background-color: var(--color-btn-bg, #21262d);
+    border-color: var(--color-btn-border, rgba(240,246,252,0.1));
+    box-shadow: var(--color-btn-shadow, 0 0 transparent), var(--color-btn-inset-shadow, 0 0 transparent);
+  }
+
+  .Button--secondary:hover {
+    background-color: var(--color-btn-hover-bg, #30363d);
+    border-color: var(--color-btn-hover-border, #8b949e);
+  }
+
+  .Button--secondary:active {
+    background-color: var(--color-btn-active-bg, hsla(212,12%,18%,1));
+    border-color: var(--color-btn-active-border, #6e7681);
+  }
 } 

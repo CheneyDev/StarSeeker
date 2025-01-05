@@ -1,7 +1,7 @@
 class SearchBox {
   constructor() {
     this.container = document.createElement('div');
-    this.container.className = 'ai-search-container';
+    this.container.className = 'subnav-search width-full';
     this.geminiClient = null;
     this.initGeminiClient();
     this.render();
@@ -20,40 +20,54 @@ class SearchBox {
 
   render() {
     this.container.innerHTML = `
-      <div class="ai-search-wrapper">
-        <input 
-          type="text" 
-          class="ai-search-input" 
-          placeholder="使用 AI 搜索已收藏的仓库..."
-          autocomplete="off"
-          spellcheck="false"
-        >
-        <button class="ai-search-clear" title="清除搜索">
-          <svg class="ai-search-clear-icon" viewBox="0 0 16 16" width="16" height="16">
-            <path fill="currentColor" d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
-          </svg>
-        </button>
-        <button class="ai-search-button" title="搜索">
-          <svg class="ai-search-button-icon" viewBox="0 0 16 16" width="16" height="16">
-            <path fill="currentColor" d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path>
-          </svg>
-        </button>
+      <div class="FormControl-spacingWrapper">
+        <div class="FormControl-horizontalGroup">
+          <div class="FormControl width-full">
+            <label class="sr-only FormControl-label" for="star-search">
+              Search stars
+            </label>    
+            <div class="FormControl-input-wrap FormControl-input-wrap--leadingVisual">
+              <span class="FormControl-input-leadingVisualWrap">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-search FormControl-input-leadingVisual">
+                  <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path>
+                </svg>
+              </span>
+              <input 
+                id="star-search"
+                type="search" 
+                class="FormControl-input FormControl-medium"
+                placeholder="Search stars"
+                aria-label="Search stars"
+                autocomplete="off"
+                spellcheck="false"
+              >
+            </div>
+          </div>
+          <button type="button" class="search-clear-button" style="display: none;">
+            <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+              <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
+            </svg>
+          </button>
+          <button type="submit" class="Button Button--secondary" data-hotkey="s,/" data-action="click:qbsearch-input#handleSubmit">
+            <span class="Button-content">
+              <span class="Button-label">Search</span>
+            </span>
+          </button>
+        </div>
       </div>
-      <div class="ai-search-results"></div>
+      <div class="search-results"></div>
     `;
 
-    this.input = this.container.querySelector('.ai-search-input');
-    this.resultsContainer = this.container.querySelector('.ai-search-results');
-    this.clearButton = this.container.querySelector('.ai-search-clear');
-    this.searchButton = this.container.querySelector('.ai-search-button');
+    // 获取元素引用
+    this.input = this.container.querySelector('input[type="search"]');
+    this.resultsContainer = this.container.querySelector('.search-results');
+    this.clearButton = this.container.querySelector('.search-clear-button');
+    this.searchButton = this.container.querySelector('.Button--secondary');
 
-    // 监听输入框变化，控制清除按钮的显示/隐藏
+    // 监听输入框变化
     this.input.addEventListener('input', () => {
       this.clearButton.style.display = this.input.value ? 'flex' : 'none';
     });
-
-    // 初始化时隐藏清除按钮
-    this.clearButton.style.display = 'none';
 
     // 清除按钮点击事件
     this.clearButton.addEventListener('click', () => {
@@ -73,15 +87,6 @@ class SearchBox {
       if (e.key === 'Enter') {
         await this.handleSearch();
       }
-    });
-
-    // 输入框获得焦点时的动画效果
-    this.input.addEventListener('focus', () => {
-      this.container.querySelector('.ai-search-wrapper').classList.add('focused');
-    });
-
-    this.input.addEventListener('blur', () => {
-      this.container.querySelector('.ai-search-wrapper').classList.remove('focused');
     });
   }
 
